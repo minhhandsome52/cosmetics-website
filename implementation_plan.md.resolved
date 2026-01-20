@@ -1,0 +1,350 @@
+# Kế Hoạch Triển Khai Hệ Thống Web Quản Lý Mỹ Phẩm
+
+## Tổng Quan Dự Án
+
+Xây dựng hệ thống thương mại điện tử quản lý mỹ phẩm với các tính năng đặc thù:
+- Quản lý lô sản phẩm và hạn sử dụng
+- Cảnh báo sản phẩm sắp hết hạn/đã hết hạn
+- Kiểm tra hạn sử dụng trước khi cho phép bán
+
+```mermaid
+graph TB
+    subgraph Frontend
+        A[HTML/CSS/JS] --> B[Fetch API]
+    end
+    subgraph Backend
+        C[Express.js] --> D[REST API]
+        D --> E[Controllers]
+        E --> F[MySQL Driver]
+    end
+    subgraph Database
+        G[(MySQL)]
+    end
+    B --> D
+    F --> G
+```
+
+---
+
+## Cấu Trúc Dự Án
+
+```
+d:\web mypham\
+├── backend/
+│   ├── config/
+│   │   └── database.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── productController.js
+│   │   ├── batchController.js
+│   │   ├── categoryController.js
+│   │   ├── cartController.js
+│   │   └── orderController.js
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── productRoutes.js
+│   │   ├── batchRoutes.js
+│   │   ├── categoryRoutes.js
+│   │   ├── cartRoutes.js
+│   │   └── orderRoutes.js
+│   ├── .env
+│   ├── package.json
+│   └── server.js
+├── frontend/
+│   ├── css/
+│   │   ├── style.css
+│   │   └── admin.css
+│   ├── js/
+│   │   ├── api.js
+│   │   ├── auth.js
+│   │   ├── cart.js
+│   │   ├── products.js
+│   │   └── admin.js
+│   ├── images/
+│   ├── index.html
+│   ├── products.html
+│   ├── product-detail.html
+│   ├── cart.html
+│   ├── checkout.html
+│   ├── login.html
+│   ├── register.html
+│   ├── orders.html
+│   └── admin/
+│       ├── dashboard.html
+│       ├── products.html
+│       ├── batches.html
+│       └── orders.html
+└── database/
+    ├── schema.sql
+    └── seed.sql
+```
+
+---
+
+## Phase 1: Database (MySQL)
+
+### Thiết Kế Bảng Dữ Liệu
+
+```mermaid
+erDiagram
+    USERS ||--o{ ORDERS : places
+    USERS ||--o{ CART_ITEMS : has
+    CATEGORIES ||--o{ PRODUCTS : contains
+    PRODUCTS ||--o{ BATCHES : has
+    PRODUCTS ||--o{ ORDER_ITEMS : included_in
+    BATCHES ||--o{ INVENTORY : tracks
+    ORDERS ||--o{ ORDER_ITEMS : contains
+
+    USERS {
+        int id PK
+        string name
+        string email
+        string password
+        string phone
+        string address
+        enum role
+        datetime created_at
+    }
+    
+    CATEGORIES {
+        int id PK
+        string name
+        string description
+        string image_url
+    }
+    
+    PRODUCTS {
+        int id PK
+        int category_id FK
+        string name
+        string brand
+        text description
+        text ingredients
+        text usage_instructions
+        decimal price
+        string image_url
+        datetime created_at
+    }
+    
+    BATCHES {
+        int id PK
+        int product_id FK
+        string batch_number
+        date manufacture_date
+        date expiry_date
+        int initial_quantity
+        enum status
+    }
+    
+    INVENTORY {
+        int id PK
+        int batch_id FK
+        int quantity
+        datetime last_updated
+    }
+    
+    CART_ITEMS {
+        int id PK
+        int user_id FK
+        int product_id FK
+        int quantity
+    }
+    
+    ORDERS {
+        int id PK
+        int user_id FK
+        decimal total_amount
+        string shipping_address
+        string phone
+        enum status
+        datetime created_at
+    }
+    
+    ORDER_ITEMS {
+        int id PK
+        int order_id FK
+        int product_id FK
+        int batch_id FK
+        int quantity
+        decimal unit_price
+    }
+```
+
+### [NEW] [schema.sql](file:///d:/web%20mypham/database/schema.sql)
+Tạo tất cả các bảng với các ràng buộc khóa ngoại và index.
+
+### [NEW] [seed.sql](file:///d:/web%20mypham/database/seed.sql)
+Dữ liệu mẫu bao gồm:
+- 2 users (1 admin, 1 customer)
+- 5 categories (Chăm sóc da, Trang điểm, Chăm sóc tóc, Nước hoa, Chăm sóc cơ thể)
+- 10+ products với đầy đủ thông tin
+- Các batches với ngày hết hạn khác nhau (bao gồm sắp hết hạn và đã hết hạn)
+
+---
+
+## Phase 2: Backend (Node.js + Express)
+
+### Cấu Hình Project
+
+| File | Mô tả |
+|------|-------|
+| `package.json` | Dependencies: express, mysql2, bcryptjs, jsonwebtoken, cors, dotenv |
+| `.env` | Biến môi trường: DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, JWT_SECRET, PORT |
+| `server.js` | Entry point, middleware setup, route mounting |
+
+### API Endpoints
+
+#### Authentication API
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/api/auth/register` | Đăng ký tài khoản mới |
+| POST | `/api/auth/login` | Đăng nhập |
+| GET | `/api/auth/profile` | Lấy thông tin profile (cần auth) |
+
+#### Products API
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/products` | Danh sách sản phẩm (có filter, search) |
+| GET | `/api/products/:id` | Chi tiết sản phẩm |
+| POST | `/api/products` | Thêm sản phẩm mới (admin) |
+| PUT | `/api/products/:id` | Cập nhật sản phẩm (admin) |
+| DELETE | `/api/products/:id` | Xóa sản phẩm (admin) |
+
+#### Categories API
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/categories` | Danh sách danh mục |
+| GET | `/api/categories/:id/products` | Sản phẩm theo danh mục |
+
+#### Batches API (Nghiệp vụ đặc thù)
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/batches` | Danh sách lô hàng |
+| GET | `/api/batches/expiring` | Lô hàng sắp hết hạn (≤30 ngày) |
+| GET | `/api/batches/expired` | Lô hàng đã hết hạn |
+| POST | `/api/batches` | Thêm lô mới (admin) |
+| PUT | `/api/batches/:id` | Cập nhật lô (admin) |
+| GET | `/api/batches/check/:productId` | Kiểm tra tồn kho còn hạn sử dụng |
+
+#### Cart API
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/cart` | Xem giỏ hàng |
+| POST | `/api/cart` | Thêm vào giỏ hàng |
+| PUT | `/api/cart/:id` | Cập nhật số lượng |
+| DELETE | `/api/cart/:id` | Xóa khỏi giỏ hàng |
+
+#### Orders API
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/api/orders` | Đặt hàng (kiểm tra HSD trước khi tạo) |
+| GET | `/api/orders` | Lịch sử đơn hàng (user) / Tất cả đơn (admin) |
+| GET | `/api/orders/:id` | Chi tiết đơn hàng |
+| PUT | `/api/orders/:id/status` | Cập nhật trạng thái (admin) |
+
+### Xử Lý Nghiệp Vụ Đặc Thù
+
+> [!IMPORTANT]
+> **Kiểm tra hạn sử dụng**: Khi khách đặt hàng, hệ thống sẽ tự động chọn lô còn hạn sử dụng và ưu tiên xuất lô có HSD gần nhất (FEFO - First Expired, First Out).
+
+> [!WARNING]
+> **Cảnh báo hết hạn**: Admin dashboard hiển thị cảnh báo các lô sắp hết hạn trong 30 ngày và các lô đã hết hạn.
+
+---
+
+## Phase 3: Frontend (HTML/CSS/JavaScript)
+
+### Trang Khách Hàng
+
+| File | Mô tả |
+|------|-------|
+| `index.html` | Trang chủ: Banner, danh mục, sản phẩm nổi bật |
+| `products.html` | Danh sách sản phẩm với filter và search |
+| `product-detail.html` | Chi tiết sản phẩm (thành phần, công dụng, HSD) |
+| `cart.html` | Giỏ hàng |
+| `checkout.html` | Thanh toán |
+| `login.html` | Đăng nhập |
+| `register.html` | Đăng ký |
+| `orders.html` | Lịch sử mua hàng |
+
+### Trang Admin
+
+| File | Mô tả |
+|------|-------|
+| `admin/dashboard.html` | Dashboard với cảnh báo HSD |
+| `admin/products.html` | Quản lý sản phẩm |
+| `admin/batches.html` | Quản lý lô hàng & tồn kho |
+| `admin/orders.html` | Quản lý đơn hàng |
+
+### JavaScript Modules
+
+| File | Chức năng |
+|------|-----------|
+| `js/api.js` | Base API calls với Fetch, xử lý auth token |
+| `js/auth.js` | Xử lý đăng nhập, đăng ký, logout |
+| `js/products.js` | Hiển thị, search, filter sản phẩm |
+| `js/cart.js` | Quản lý giỏ hàng |
+| `js/admin.js` | Các chức năng admin |
+
+### Thiết Kế UI
+
+- **Color Palette**: Pink gradient (#FF6B9D → #FFB6C1) cho theme mỹ phẩm
+- **Typography**: Inter, Outfit từ Google Fonts
+- **Components**: Cards, Modals, Tables, Alerts, Badges
+- **Responsive**: Mobile-first design
+
+---
+
+## Verification Plan
+
+### 1. API Testing với Postman
+
+Tạo Postman Collection với các test cases:
+
+| API | Test Cases |
+|-----|------------|
+| Auth | Đăng ký thành công, đăng ký email trùng, đăng nhập đúng/sai |
+| Products | CRUD đầy đủ, search, filter theo category |
+| Batches | Thêm lô, danh sách sắp hết hạn, đã hết hạn |
+| Cart | Thêm/sửa/xóa sản phẩm |
+| Orders | Đặt hàng thành công, đặt hàng sản phẩm hết hạn (phải fail) |
+
+### 2. Browser Testing
+
+| Flow | Các bước kiểm tra |
+|------|-------------------|
+| Customer Flow | Xem sản phẩm → Thêm vào giỏ → Đăng ký → Đăng nhập → Đặt hàng → Xem lịch sử |
+| Admin Flow | Đăng nhập admin → Xem dashboard → Thêm sản phẩm → Thêm lô → Xem cảnh báo HSD → Xử lý đơn hàng |
+
+### 3. Kiểm Tra Nghiệp Vụ Đặc Thù
+
+| Test Case | Expected Result |
+|-----------|-----------------|
+| Đặt hàng sản phẩm còn hạn | Đặt hàng thành công, trừ từ lô gần hết hạn nhất |
+| Đặt hàng sản phẩm đã hết hạn | Hệ thống từ chối, hiển thị thông báo lỗi |
+| Admin xem dashboard | Hiển thị cảnh báo lô sắp hết hạn (≤30 ngày) và đã hết hạn |
+
+---
+
+## Tiến Độ Dự Kiến
+
+| Phase | Thời gian | Công việc |
+|-------|-----------|-----------|
+| 1 | 1 ngày | Database design & setup |
+| 2 | 3-4 ngày | Backend API development |
+| 3 | 4-5 ngày | Frontend development |
+| 4 | 1-2 ngày | Integration & Testing |
+
+**Tổng cộng: ~10-12 ngày**
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> Xin hãy review kế hoạch triển khai này và cho biết:
+> 1. Có cần bổ sung tính năng nào không?
+> 2. Có thay đổi gì về thiết kế database không?
+> 3. Có yêu cầu đặc biệt nào về giao diện không?

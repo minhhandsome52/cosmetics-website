@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng của tôi - Mihn Cosmetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-bottle-droplet"></i></span>
+                Mihn Cosmetics
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Trang chủ</a>
+                <a href="products.html" class="nav-link">Sản phẩm</a>
+            </nav>
+            <div class="nav-icons">
+                <a href="cart.html" class="nav-icon-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-badge">0</span>
+                </a>
+                <button class="btn btn-ghost btn-sm" onclick="API.auth.logout()">Đăng xuất</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="section" style="min-height: 70vh;">
+        <div class="container" style="max-width: 900px;">
+            <h1 style="margin-bottom: 0.5rem;"><i class="fas fa-box" style="color: var(--primary-500);"></i> Đơn hàng
+                của tôi</h1>
+            <p style="color: var(--gray-500); margin-bottom: 2rem;">Theo dõi và quản lý đơn hàng của bạn</p>
+
+            <!-- Success message -->
+            <div id="successMessage" class="alert alert-success" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span>Đặt hàng thành công! Đơn hàng của bạn đang được xử lý.</span>
+            </div>
+
+            <div id="ordersContent">
+                <div style="text-align: center; padding: 3rem;">
+                    <div class="spinner" style="margin: 0 auto;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; margin-top: 0;">
+                <p>&copy; 2026 Mihn Cosmetics. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        const statusLabels = {
+            pending: { text: 'Chờ xác nhận', class: 'status-pending' },
+            confirmed: { text: 'Đã xác nhận', class: 'status-confirmed' },
+            shipping: { text: 'Đang giao', class: 'status-shipping' },
+            delivered: { text: 'Đã giao', class: 'status-delivered' },
+            cancelled: { text: 'Đã hủy', class: 'status-cancelled' }
+        };
+
+        // Check for success parameter
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('success')) {
+            document.getElementById('successMessage').style.display = 'flex';
+        }
+
+        async function loadOrders() {
+            if (!Utils.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await API.orders.getUserOrders();
+
+                if (response.success) {
+                    renderOrders(response.data);
+                }
+            } catch (error) {
+                document.getElementById('ordersContent').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Không thể tải danh sách đơn hàng
+                    </div>
+                `;
+            }
+        }
+
+        function renderOrders(orders) {
+            if (orders.length === 0) {
+                document.getElementById('ordersContent').innerHTML = `
+                    <div style="text-align: center; padding: 4rem; background: white; border-radius: 1rem;">
+                        <i class="fas fa-box-open" style="font-size: 4rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
+                        <h2 style="color: var(--gray-500); margin-bottom: 1rem;">Chưa có đơn hàng</h2>
+                        <p style="color: var(--gray-400); margin-bottom: 2rem;">Bạn chưa đặt đơn hàng nào</p>
+                        <a href="products.html" class="btn btn-primary btn-lg">Mua sắm ngay</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const ordersHtml = orders.map(order => `
+                <div style="background: white; border-radius: 1rem; margin-bottom: 1rem; overflow: hidden; border: 1px solid var(--gray-100);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: var(--gray-50); border-bottom: 1px solid var(--gray-100);">
+                        <div>
+                            <span style="font-weight: 600; color: var(--gray-800);">Đơn hàng #${order.id}</span>
+                            <span style="color: var(--gray-500); font-size: 0.875rem; margin-left: 1rem;">
+                                ${Utils.formatDate(order.created_at)}
+                            </span>
+                        </div>
+                        <span class="status-badge ${statusLabels[order.status].class}">
+                            ${statusLabels[order.status].text}
+                        </span>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="color: var(--gray-500); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                                    ${order.item_count} sản phẩm
+                                </p>
+                                <p style="font-size: 1.25rem; font-weight: 700; color: var(--primary-600);">
+                                    ${Utils.formatCurrency(order.total_amount)}
+                                </p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="viewOrderDetail(${order.id})">
+                                <i class="fas fa-eye"></i> Chi tiết
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('ordersContent').innerHTML = ordersHtml;
+        }
+
+        async function viewOrderDetail(orderId) {
+            try {
+                Utils.showLoading();
+                const response = await API.orders.getById(orderId);
+                Utils.hideLoading();
+
+                if (response.success) {
+                    showOrderModal(response.data);
+                }
+            } catch (error) {
+                Utils.hideLoading();
+                Utils.showToast('Không thể tải chi tiết đơn hàng', 'error');
+            }
+        }
+
+        function showOrderModal(order) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.remove();
+            };
+
+            const itemsHtml = order.items.map(item => `
+                <div style="display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100);">
+                    <img src="${item.image_url || 'https://via.placeholder.com/60'}" 
+                         style="width: 60px; height: 60px; border-radius: 0.5rem; object-fit: cover;">
+                    <div style="flex: 1;">
+                        <p style="font-weight: 500;">${item.product_name}</p>
+                        <p style="color: var(--gray-500); font-size: 0.875rem;">
+                            ${item.brand} • Lô: ${item.batch_number}
+                        </p>
+                        <p style="font-size: 0.75rem; color: var(--gray-400);">
+                            HSD: ${Utils.formatDate(item.expiry_date)}
+                        </p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="font-weight: 600;">${Utils.formatCurrency(item.unit_price)}</p>
+                        <p style="color: var(--gray-500); font-size: 0.875rem;">x${item.quantity}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Chi tiết đơn hàng #${order.id}</h3>
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span class="status-badge ${statusLabels[order.status].class}">
+                                ${statusLabels[order.status].text}
+                            </span>
+                            <span style="color: var(--gray-500); font-size: 0.875rem;">
+                                ${Utils.formatDate(order.created_at)}
+                            </span>
+                        </div>
+
+                        <div style="background: var(--gray-50); border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;">
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">
+                                <i class="fas fa-truck" style="color: var(--primary-500);"></i> Thông tin giao hàng
+                            </p>
+                            <p style="color: var(--gray-600);">${order.shipping_address}</p>
+                            <p style="color: var(--gray-600);">SĐT: ${order.phone}</p>
+                        </div>
+
+                        <h4 style="margin-bottom: 1rem;">Sản phẩm đã đặt</h4>
+                        <div style="max-height: 300px; overflow-y: auto;">
+                            ${itemsHtml}
+                        </div>
+
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-200);">
+                            <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700;">
+                                <span>Tổng cộng</span>
+                                <span style="color: var(--primary-600);">${Utils.formatCurrency(order.total_amount)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOrders);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+

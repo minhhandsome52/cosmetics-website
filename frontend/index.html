@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mihn Cosmetics - Mỹ Phẩm Chính Hãng</title>
+    <meta name="description"
+        content="Mihn Cosmetics - Cửa hàng mỹ phẩm chính hãng với đa dạng sản phẩm chăm sóc da, trang điểm, nước hoa từ các thương hiệu nổi tiếng.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-bottle-droplet"></i></span>
+                Mihn Cosmetics
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link active">Trang chủ</a>
+                <a href="products.html" class="nav-link">Sản phẩm</a>
+                <a href="products.html?category=1" class="nav-link">Chăm sóc da</a>
+                <a href="products.html?category=2" class="nav-link">Trang điểm</a>
+                <a href="products.html?category=4" class="nav-link">Nước hoa</a>
+                <a href="products.html?category=6" class="nav-link">Chăm sóc tóc</a>
+            </nav>
+
+            <div class="nav-icons">
+                <div class="search-bar" style="max-width: 280px;">
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..." id="searchInput">
+                    <button class="btn btn-primary btn-sm" onclick="handleSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <a href="cart.html" class="nav-icon-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-badge">0</span>
+                </a>
+
+                <!-- Auth buttons (not logged in) -->
+                <div class="auth-buttons flex gap-sm">
+                    <a href="login.html" class="btn btn-outline btn-sm">Đăng nhập</a>
+                    <a href="register.html" class="btn btn-primary btn-sm">Đăng ký</a>
+                </div>
+
+                <!-- User menu (logged in) -->
+                <div class="user-menu flex items-center gap-sm" style="display: none;">
+                    <span class="user-name" style="font-weight: 500;"></span>
+                    <div class="dropdown" style="position: relative;">
+                        <button class="nav-icon-btn" onclick="toggleUserDropdown()">
+                            <i class="fas fa-user-circle"></i>
+                        </button>
+                        <div class="dropdown-menu" id="userDropdown"
+                            style="display: none; position: absolute; right: 0; top: 100%; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); padding: 8px; min-width: 180px; z-index: 1000;">
+                            <a href="admin/dashboard.html" id="adminLink"
+                                style="display: none; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 8px; color: #ec4899; font-weight: 500; transition: background 0.2s;">
+                                <i class="fas fa-chart-pie"></i> Quản lý
+                            </a>
+                            <a href="orders.html"
+                                style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 8px; color: #374151; transition: background 0.2s;">
+                                <i class="fas fa-shopping-bag"></i> Đơn hàng của tôi
+                            </a>
+                            <a href="#" onclick="handleLogout()"
+                                style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 8px; color: #ef4444; transition: background 0.2s;">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="hero-badge">
+                    <i class="fas fa-vialrkles"></i>
+                    Ưu đãi đặc biệt
+                </span>
+                <h1 class="hero-title">
+                    Khám Phá Vẻ Đẹp<br>Hoàn Hảo Của Bạn
+                </h1>
+                <p class="hero-subtitle">
+                    Mỹ phẩm chính hãng từ các thương hiệu hàng đầu thế giới.
+                    Chất lượng đảm bảo, giao hàng nhanh chóng.
+                </p>
+                <div class="hero-buttons">
+                    <a href="products.html" class="btn hero-btn-primary">
+                        <i class="fas fa-shopping-bag"></i>
+                        Mua sắm ngay
+                    </a>
+                    <a href="#categories" class="btn hero-btn-secondary">
+                        Xem danh mục
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Sản phẩm</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Thương hiệu</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Khách hàng</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=600&fit=crop"
+                    alt="Cosmetics">
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="section" id="categories">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="text-gradient">Danh Mục Sản Phẩm</span>
+            </h2>
+            <p class="section-subtitle">
+                Khám phá đa dạng các dòng sản phẩm chăm sóc sắc đẹp chất lượng cao
+            </p>
+
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Coupon Banner -->
+    <div class="coupon-banner-section"
+        style="background: linear-gradient(120deg, #fff0f5 0%, #fff 50%, #ffeef0 100%); padding: 3rem 0; margin-bottom: 2rem; position: relative; overflow: hidden;">
+        <!-- Delicate background elements -->
+        <div
+            style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,182,193,0.2); border-radius: 50%; filter: blur(50px);">
+        </div>
+        <div
+            style="position: absolute; bottom: -50px; left: -50px; width: 150px; height: 150px; background: rgba(255,107,157,0.15); border-radius: 50%; filter: blur(40px);">
+        </div>
+
+        <div class="container" style="position: relative; z-index: 1;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2
+                    style="font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--gray-900); font-size: 1.75rem; margin-bottom: 0.5rem;">
+                    <i class="fas fa-gift" style="color: var(--primary-500); margin-right: 0.5rem;"></i> Ưu Đãi Đặc Biệt
+                </h2>
+                <p style="color: var(--gray-500);">Dành tặng bạn những mã giảm giá hấp dẫn nhất hôm nay</p>
+            </div>
+
+            <!-- Slider container with arrows -->
+            <div style="position: relative;">
+                <!-- Left Arrow -->
+                <button id="couponPrev" onclick="scrollCoupons(-1)"
+                    style="position: absolute; left: -20px; top: 50%; transform: translateY(-50%); z-index: 10; width: 44px; height: 44px; border-radius: 50%; border: none; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; display: none; align-items: center; justify-content: center; transition: all 0.2s ease;">
+                    <i class="fas fa-chevron-left" style="color: var(--gray-600);"></i>
+                </button>
+
+                <!-- Coupons Container -->
+                <div id="couponsContainer"
+                    style="display: flex; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; padding: 0.5rem 0; scrollbar-width: none; -ms-overflow-style: none;">
+                    <!-- Coupons loaded dynamically -->
+                    <div style="text-align: center; padding: 2rem; width: 100%;">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <!-- Right Arrow -->
+                <button id="couponNext" onclick="scrollCoupons(1)"
+                    style="position: absolute; right: -20px; top: 50%; transform: translateY(-50%); z-index: 10; width: 44px; height: 44px; border-radius: 50%; border: none; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; display: none; align-items: center; justify-content: center; transition: all 0.2s ease;">
+                    <i class="fas fa-chevron-right" style="color: var(--gray-600);"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products Section -->
+    <section class="section" style="background: white;">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="text-gradient">Sản Phẩm Nổi Bật</span>
+            </h2>
+            <p class="section-subtitle">
+                Những sản phẩm được yêu thích nhất từ các thương hiệu hàng đầu
+            </p>
+
+            <div class="products-grid" id="featuredProducts">
+                <!-- Products loaded dynamically -->
+            </div>
+
+            <div class="text-center" style="margin-top: 2rem;">
+                <a href="products.html" class="btn btn-primary btn-lg">
+                    Xem tất cả sản phẩm
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <div class="grid grid-4 gap-lg">
+                <div class="category-card" style="text-align: center;">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Giao hàng nhanh</h3>
+                    <p style="color: #71717a; font-size: 0.875rem;">Miễn phí giao hàng đơn từ 500K</p>
+                </div>
+                <div class="category-card" style="text-align: center;">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Chính hãng 100%</h3>
+                    <p style="color: #71717a; font-size: 0.875rem;">Cam kết sản phẩm chính hãng</p>
+                </div>
+                <div class="category-card" style="text-align: center;">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Đổi trả dễ dàng</h3>
+                    <p style="color: #71717a; font-size: 0.875rem;">Đổi trả trong vòng 7 ngày</p>
+                </div>
+                <div class="category-card" style="text-align: center;">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Hỗ trợ 24/7</h3>
+                    <p style="color: #71717a; font-size: 0.875rem;">Tư vấn và hỗ trợ mọi lúc</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        M Mihn Cosmetics
+                    </div>
+                    <p class="footer-description">
+                        Cửa hàng mỹ phẩm chính hãng với đa dạng sản phẩm chăm sóc sắc đẹp từ các thương hiệu nổi tiếng
+                        thế giới.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Về chúng tôi</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Tin tức</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Hỗ trợ</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Liên hệ</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i>15 Đà Nẵng,Lê Chân,TP.Hải Phòng</li>
+                        <li><i class="fas fa-phone"></i> 1900 1234</li>
+                        <li><i class="fas fa-envelope"></i> support@MihnCosmetics.vn</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Mihn Cosmetics. All rights reserved.</p>
+                <p>
+                    <a href="#">Điều khoản sử dụng</a> |
+                    <a href="#">Chính sách bảo mật</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        // Category icons mapping
+        const categoryIcons = {
+            'Chăm sóc da': 'fas fa-hand-sparkles',
+            'Trang điểm': 'fas fa-paint-brush',
+            'Chăm sóc tóc': 'fas fa-cut',
+            'Nước hoa': 'fas fa-spray-can',
+            'Chăm sóc cơ thể': 'fas fa-bath'
+        };
+
+        // Load categories
+        async function loadCategories() {
+            try {
+                const response = await API.categories.getAll();
+                if (response.success) {
+                    const grid = document.getElementById('categoriesGrid');
+                    grid.innerHTML = response.data.map(cat => `
+                        <a href="products.html?category=${cat.id}" class="category-card">
+                            <div class="category-icon">
+                                <i class="${categoryIcons[cat.name] || 'fas fa-box'}"></i>
+                            </div>
+                            <h3 class="category-name">${cat.name}</h3>
+                            <p class="category-count">${cat.product_count || 0} sản phẩm</p>
+                        </a>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        // Load featured products
+        async function loadFeaturedProducts() {
+            try {
+                const response = await API.products.getFeatured();
+                if (response.success) {
+                    renderProducts(response.data);
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        // Render products
+        function renderProducts(products) {
+            const grid = document.getElementById('featuredProducts');
+            grid.innerHTML = products.map(product => {
+                const avgRating = product.avg_rating ? parseFloat(product.avg_rating).toFixed(1) : 0;
+                const reviewCount = product.review_count || 0;
+                const starsHtml = renderStars(avgRating);
+
+                return `
+                <div class="product-card">
+                    ${product.stock && product.stock > 0 ? '<span class="product-badge badge-new">Mới</span>' : '<span class="product-badge badge-out-of-stock">Hết hàng</span>'}
+                    <div class="product-image">
+                        <img src="${product.image_url || 'https://via.placeholder.com/300x300?text=Product'}" alt="${product.name}">
+                        <div class="product-quick-actions">
+                            <button class="quick-action-btn" onclick="quickAddToCart(${product.id})">
+                                <i class="fas fa-shopping-cart"></i>
+                                Thêm
+                            </button>
+                            <a href="product-detail.html?id=${product.id}" class="quick-action-btn">
+                                <i class="fas fa-eye"></i>
+                                Xem
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-brand">${product.brand}</span>
+                        <a href="product-detail.html?id=${product.id}">
+                            <h3 class="product-name">${product.name}</h3>
+                        </a>
+                        <div class="product-rating" style="display: flex; align-items: center; gap: 0.25rem; margin: 0.25rem 0; font-size: 0.8125rem;">
+                            <span style="color: #fbbf24;">${starsHtml}</span>
+                            <span style="color: var(--gray-500);">(${reviewCount})</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price-current">${Utils.formatCurrency(product.price)}</span>
+                        </div>
+                        <div class="product-stock ${product.stock > 10 ? 'stock-in' : product.stock > 0 ? 'stock-low' : 'stock-out'}">
+                            <i class="fas fa-circle" style="font-size: 6px;"></i>
+                            ${product.stock > 10 ? 'Còn hàng' : product.stock > 0 ? `Chỉ còn ${product.stock}` : 'Hết hàng'}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // Render star icons
+        function renderStars(rating) {
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    html += '<i class="fas fa-star"></i>';
+                } else if (i - 0.5 <= rating) {
+                    html += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    html += '<i class="far fa-star"></i>';
+                }
+            }
+            return html;
+        }
+
+        // Quick add to cart
+        async function quickAddToCart(productId) {
+            if (!Utils.isLoggedIn()) {
+                Utils.showToast('Vui lòng đăng nhập để thêm vào giỏ hàng', 'warning');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await API.cart.add(productId, 1);
+                if (response.success) {
+                    Utils.showToast('Đã thêm vào giỏ hàng!', 'success');
+                    Utils.updateCartBadge();
+                }
+            } catch (error) {
+                Utils.showToast(error.message, 'error');
+            }
+        }
+
+        // Search handler
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Search on Enter
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+
+        // User dropdown
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Logout
+        function handleLogout() {
+            API.auth.logout();
+        }
+
+        // Mobile menu
+        function toggleMobileMenu() {
+            document.getElementById('navMenu').classList.toggle('active');
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('userDropdown');
+            if (!e.target.closest('.dropdown') && dropdown) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // ===== COUPONS SLIDER =====
+        const couponColors = [
+            { bg: 'linear-gradient(135deg, #FF6B9D 0%, #FF8E8E 100%)', border: 'var(--primary-200)', text: 'var(--primary-600)' },
+            { bg: 'linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)', border: '#a5a9ff', text: '#4f46e5' },
+            { bg: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', border: '#34d399', text: '#059669' },
+            { bg: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', border: '#fbbf24', text: '#b45309' },
+            { bg: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)', border: '#a78bfa', text: '#6d28d9' },
+        ];
+
+        async function loadCoupons() {
+            try {
+                const response = await API.coupons.getActive();
+                if (response.success) {
+                    renderCoupons(response.data);
+                }
+            } catch (error) {
+                console.log('Coupons not loaded', error);
+                document.getElementById('couponsContainer').innerHTML = '<p style="text-align:center;color:var(--gray-400);width:100%;padding:1rem;">Không có mã giảm giá nào</p>';
+            }
+        }
+
+        function renderCoupons(coupons) {
+            const container = document.getElementById('couponsContainer');
+
+            if (coupons.length === 0) {
+                container.innerHTML = '<p style="text-align:center;color:var(--gray-400);width:100%;padding:1rem;">Không có mã giảm giá nào</p>';
+                return;
+            }
+
+            container.innerHTML = coupons.map((c, i) => {
+                const color = couponColors[i % couponColors.length];
+                const displayValue = c.discount_type === 'percent' ? `${c.discount_value}%` : `${Math.round(c.discount_value / 1000)}K`;
+                const description = c.min_order_amount > 0
+                    ? `Đơn từ ${Utils.formatCurrency(c.min_order_amount)}`
+                    : 'Cho mọi đơn hàng';
+
+                return `
+                <div class="coupon-card" style="min-width: 320px; flex-shrink: 0; background: white; border-radius: 12px; padding: 0.5rem; display: flex; align-items: stretch; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(255,182,193,0.3);">
+                    <div style="background: ${color.bg}; width: 100px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%;"></div>
+                        <span style="font-weight: 800; font-size: 1.5rem; line-height: 1;">${displayValue}</span>
+                        <span style="font-size: 0.75rem; font-weight: 600; margin-top: 0.25rem;">OFF</span>
+                    </div>
+                    <div style="flex: 1; padding: 1rem 1.25rem; display: flex; flex-direction: column; justify-content: center;">
+                        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.25rem;">
+                            ${c.discount_type === 'percent' ? `Giảm ${c.discount_value}%` : `Giảm ${Utils.formatCurrency(c.discount_value)}`}
+                        </h3>
+                        <p style="font-size: 0.8125rem; color: var(--gray-500); margin-bottom: 1rem;">${description}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--gray-50); padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px dashed ${color.border};">
+                            <code style="font-family: 'Space Mono', monospace; font-weight: 700; color: ${color.text}; font-size: 1rem;">${c.code}</code>
+                            <button onclick="navigator.clipboard.writeText('${c.code}'); Utils.showToast('Đã sao chép mã!')" style="border: none; background: white; width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: ${color.text}; cursor: pointer;">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+
+            // Show/hide arrows based on scroll
+            updateCouponArrows();
+            container.addEventListener('scroll', updateCouponArrows);
+        }
+
+        function scrollCoupons(direction) {
+            const container = document.getElementById('couponsContainer');
+            const scrollAmount = 340; // card width + gap
+            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        function updateCouponArrows() {
+            const container = document.getElementById('couponsContainer');
+            const prevBtn = document.getElementById('couponPrev');
+            const nextBtn = document.getElementById('couponNext');
+
+            if (!container || !prevBtn || !nextBtn) return;
+
+            const canScrollLeft = container.scrollLeft > 0;
+            const canScrollRight = container.scrollLeft < (container.scrollWidth - container.clientWidth - 10);
+
+            prevBtn.style.display = canScrollLeft ? 'flex' : 'none';
+            nextBtn.style.display = canScrollRight ? 'flex' : 'none';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategories();
+            loadFeaturedProducts();
+            loadCoupons();
+        });
+    </script>
+</body>
+
+</html>

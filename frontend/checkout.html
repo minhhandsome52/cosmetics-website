@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - Mihn Cosmetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-bottle-droplet"></i></span>
+                Mihn Cosmetics
+            </a>
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-500);">
+                <span
+                    style="width: 24px; height: 24px; background: var(--primary-500); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</span>
+                Giỏ hàng
+                <i class="fas fa-chevron-right"></i>
+                <span
+                    style="width: 24px; height: 24px; background: var(--primary-500); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</span>
+                <strong style="color: var(--gray-800);">Thanh toán</strong>
+            </div>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <h1 style="text-align: center; margin-bottom: 2rem;">Thanh toán</h1>
+
+            <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem; max-width: 1000px; margin: 0 auto;">
+                <!-- Shipping Form -->
+                <div style="background: white; border-radius: 1rem; padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-truck" style="color: var(--primary-500);"></i>
+                        Thông tin giao hàng</h3>
+
+                    <form id="checkoutForm">
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Họ và tên *</label>
+                            <input type="text" class="form-input" id="fullName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Số điện thoại *</label>
+                            <input type="tel" class="form-input" id="phone" required placeholder="0901234567">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Địa chỉ giao hàng *</label>
+                            <textarea class="form-input" id="address" rows="3" required
+                                placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Ghi chú</label>
+                            <textarea class="form-input" id="notes" rows="2"
+                                placeholder="Ghi chú cho đơn hàng (không bắt buộc)"></textarea>
+                        </div>
+
+                        <h3 style="margin: 2rem 0 1rem;"><i class="fas fa-credit-card"
+                                style="color: var(--primary-500);"></i> Phương thức thanh toán</h3>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <label id="codLabel"
+                                style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; border: 2px solid var(--primary-400); border-radius: 0.75rem; cursor: pointer; background: var(--primary-50);">
+                                <input type="radio" name="payment" value="cod" checked onchange="togglePaymentMethod()">
+                                <i class="fas fa-money-bill-wave" style="color: var(--success);"></i>
+                                <span>Thanh toán khi nhận hàng (COD)</span>
+                            </label>
+                            <label id="bankLabel"
+                                style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; border: 2px solid var(--gray-200); border-radius: 0.75rem; cursor: pointer;">
+                                <input type="radio" name="payment" value="bank" onchange="togglePaymentMethod()">
+                                <i class="fas fa-university" style="color: var(--info);"></i>
+                                <span>Chuyển khoản ngân hàng</span>
+                            </label>
+                        </div>
+
+                        <!-- Bank Transfer Info -->
+                        <div id="bankInfo"
+                            style="display: none; margin-top: 1rem; padding: 1rem; background: var(--info-light); border-radius: 0.75rem;">
+                            <h4 style="margin-bottom: 0.75rem; color: var(--info);"><i class="fas fa-info-circle"></i>
+                                Thông tin chuyển khoản</h4>
+                            <div
+                                style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+                                <p><strong>Ngân hàng:</strong> Vietcombank</p>
+                                <p><strong>Số tài khoản:</strong> 1031365948888</p>
+                                <p><strong>Chủ tài khoản:</strong> VU VAN MINH</p>
+                            </div>
+                            <p style="font-size: 0.875rem; color: var(--gray-600);"><i
+                                    class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> Nội dung CK:
+                                <strong>Mihn Cosmetics + SĐT của bạn</strong>
+                            </p>
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">Đơn hàng sẽ được
+                                xử lý sau khi chúng tôi xác nhận thanh toán (trong vòng 24h).</p>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Summary -->
+                <div>
+                    <div class="cart-summary">
+                        <h3 style="margin-bottom: 1.5rem;">Đơn hàng của bạn</h3>
+
+                        <div id="orderItems" style="max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                            <div class="spinner" style="margin: 2rem auto;"></div>
+                        </div>
+
+                        <div class="cart-summary-row">
+                            <span>Tạm tính</span>
+                            <span id="subtotal">-</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Phí vận chuyển</span>
+                            <span id="shipping">-</span>
+                        </div>
+
+                        <!-- Coupon Section -->
+                        <div
+                            style="margin: 1rem 0; padding: 1rem 0; border-top: 1px solid var(--gray-100); border-bottom: 1px solid var(--gray-100);">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <input type="text" id="couponCode" placeholder="Nhập mã giảm giá" class="form-input"
+                                    style="text-transform: uppercase;">
+                                <button type="button" class="btn btn-outline" onclick="applyCoupon()"
+                                    id="btnApplyCoupon">Áp dụng</button>
+                            </div>
+                            <div id="couponMessage" style="font-size: 0.875rem; display: none;"></div>
+                            <div class="cart-summary-row" id="discountRow"
+                                style="display: none; color: var(--success); margin-top: 0.5rem;">
+                                <span>Giảm giá</span>
+                                <span id="discountAmount">-</span>
+                            </div>
+                        </div>
+
+                        <div class="cart-summary-row" style="font-size: 1.25rem; padding-top: 1rem;">
+                            <span>Tổng cộng</span>
+                            <span id="total" style="color: var(--primary-600);">-</span>
+                        </div>
+
+                        <button type="submit" form="checkoutForm" class="btn btn-primary btn-lg"
+                            style="width: 100%; margin-top: 1.5rem;" id="submitBtn">
+                            <i class="fas fa-check"></i>
+                            Đặt hàng
+                        </button>
+
+                        <p style="text-align: center; font-size: 0.75rem; color: var(--gray-500); margin-top: 1rem;">
+                            Bằng việc đặt hàng, bạn đồng ý với điều khoản sử dụng của chúng tôi
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        let cartData = null;
+        let appliedCouponCode = null;
+        let discount = 0;
+
+        function togglePaymentMethod() {
+            const bankRadio = document.querySelector('input[value="bank"]');
+            const bankInfo = document.getElementById('bankInfo');
+            const codLabel = document.getElementById('codLabel');
+            const bankLabel = document.getElementById('bankLabel');
+
+            if (bankRadio.checked) {
+                bankInfo.style.display = 'block';
+                bankLabel.style.border = '2px solid var(--primary-400)';
+                bankLabel.style.background = 'var(--primary-50)';
+                codLabel.style.border = '2px solid var(--gray-200)';
+                codLabel.style.background = 'white';
+            } else {
+                bankInfo.style.display = 'none';
+                codLabel.style.border = '2px solid var(--primary-400)';
+                codLabel.style.background = 'var(--primary-50)';
+                bankLabel.style.border = '2px solid var(--gray-200)';
+                bankLabel.style.background = 'white';
+            }
+        }
+
+        async function loadCart() {
+            if (!Utils.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await API.cart.get();
+                if (response.success) {
+                    cartData = response.data;
+
+                    if (cartData.items.length === 0) {
+                        window.location.href = 'cart.html';
+                        return;
+                    }
+
+                    renderOrderSummary();
+                    prefillUserInfo();
+                }
+            } catch (error) {
+                Utils.showToast('Không thể tải giỏ hàng', 'error');
+            }
+        }
+
+        async function applyCoupon() {
+            const codeInput = document.getElementById('couponCode');
+            const code = codeInput.value.trim().toUpperCase();
+            const messageEl = document.getElementById('couponMessage');
+
+            if (!code) {
+                Utils.showToast('Vui lòng nhập mã giảm giá', 'warning');
+                return;
+            }
+
+            // Reset UI
+            messageEl.style.display = 'none';
+            messageEl.className = '';
+
+            try {
+                Utils.showLoading();
+                const response = await API.coupons.validate(code, cartData.total);
+                Utils.hideLoading();
+
+                if (response.success) {
+                    const { discountAmount } = response.data;
+                    appliedCouponCode = code;
+                    discount = discountAmount;
+
+                    // Update UI
+                    messageEl.textContent = `Áp dụng mã ${code} thành công - Giảm ${Utils.formatCurrency(discount)}`;
+                    messageEl.style.color = 'var(--success)';
+                    messageEl.style.display = 'block';
+
+                    document.getElementById('discountRow').style.display = 'flex';
+                    document.getElementById('discountAmount').textContent = `-${Utils.formatCurrency(discount)}`;
+
+                    document.getElementById('btnApplyCoupon').textContent = 'Đã áp dụng';
+                    document.getElementById('btnApplyCoupon').disabled = true;
+                    codeInput.disabled = true;
+
+                    updateTotal();
+                }
+            } catch (error) {
+                Utils.hideLoading();
+                messageEl.textContent = error.message;
+                messageEl.style.color = 'var(--danger)';
+                messageEl.style.display = 'block';
+                appliedCouponCode = null;
+                discount = 0;
+                document.getElementById('discountRow').style.display = 'none';
+                updateTotal();
+            }
+        }
+
+        function renderOrderSummary() {
+            const itemsHtml = cartData.items.map(item => `
+                <div style="display: flex; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100);">
+                    <img src="${item.image_url || 'https://via.placeholder.com/50'}" 
+                         style="width: 50px; height: 50px; border-radius: 0.5rem; object-fit: cover;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">${item.name}</div>
+                        <div style="font-size: 0.8125rem; color: var(--gray-500);">
+                            ${item.quantity} x ${Utils.formatCurrency(item.price)}
+                        </div>
+                    </div>
+                    <div style="font-weight: 600; font-size: 0.875rem;">
+                        ${Utils.formatCurrency(item.price * item.quantity)}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('orderItems').innerHTML = itemsHtml;
+            document.getElementById('subtotal').textContent = Utils.formatCurrency(cartData.total);
+            document.getElementById('shipping').textContent = 'Miễn phí';
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const finalTotal = Math.max(0, cartData.total - discount);
+            document.getElementById('total').textContent = Utils.formatCurrency(finalTotal);
+        }
+
+        function prefillUserInfo() {
+            const user = Utils.getUser();
+            if (user) {
+                // If we had stored address/phone in user object, we would prefill here
+                // assuming user object has these fields. If only simple auth, we skip or fetch profile.
+                API.auth.getProfile().then(res => {
+                    if (res.success) {
+                        const profile = res.data;
+                        if (profile.phone) document.getElementById('phone').value = profile.phone;
+                        if (profile.address) document.getElementById('address').value = profile.address;
+                    }
+                });
+            }
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const notes = document.getElementById('notes').value;
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+            if (!address || !phone) {
+                Utils.showToast('Vui lòng điền đầy đủ thông tin giao hàng', 'warning');
+                return;
+            }
+
+            try {
+                Utils.showLoading();
+                const response = await API.orders.create({
+                    shipping_address: address,
+                    phone: phone,
+                    notes: notes,
+                    coupon_code: appliedCouponCode // Send coupon code
+                });
+                Utils.hideLoading();
+
+                if (response.success) {
+                    Utils.showToast('Đặt hàng thành công!', 'success');
+                    // Store order info if needed or just redirect
+                    setTimeout(() => {
+                        window.location.href = 'orders.html'; // Or success page
+                    }, 1500);
+                }
+            } catch (error) {
+                Utils.hideLoading();
+                Utils.showToast(error.message || 'Đặt hàng thất bại', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Utils.checkAuthStatus();
+            loadCart();
+        });
+    </script>
+</body>

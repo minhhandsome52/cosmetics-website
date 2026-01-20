@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Mihn Cosmetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body
+    style="background: var(--gradient-secondary); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 0;">
+    <div
+        style="max-width: 450px; width: 90%; background: white; border-radius: 1.5rem; padding: 2.5rem; box-shadow: var(--shadow-2xl);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a href="index.html" class="logo" style="justify-content: center; font-size: 2rem;">
+                <span class="logo-icon"><i class="fas fa-bottle-droplet"></i></span>
+                Mihn Cosmetics
+            </a>
+            <h1 style="font-size: 1.5rem; margin-top: 1rem;">Tạo tài khoản mới</h1>
+            <p style="color: var(--gray-500);">Đăng ký để nhận ưu đãi độc quyền</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label class="forMihn Cosmeticsel">Họ và tên *</label>
+                <div class="form-input-icon">
+                    <span class="icon"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-input" id="name" placeholder="Nguyễn Văn A" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="forMihn Cosmeticsel">Email *</label>
+                <div class="form-input-icon">
+                    <span class="icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-input" id="email" placeholder="your@email.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="forMihn Cosmeticsel">Số điện thoại</label>
+                <div class="form-input-icon">
+                    <span class="icon"><i class="fas fa-phone"></i></span>
+                    <input type="tel" class="form-input" id="phone" placeholder="0901234567">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="forMihn Cosmeticsel">Mật khẩu *</label>
+                <div class="form-input-icon">
+                    <span class="icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-input" id="password" placeholder="Tối thiểu 6 ký tự" required
+                        minlength="6">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="forMihn Cosmeticsel">Xác nhận mật khẩu *</label>
+                <div class="form-input-icon">
+                    <span class="icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Nhập lại mật khẩu"
+                        required>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="agree" required style="margin-top: 4px;">
+                    <span style="font-size: 0.875rem; color: var(--gray-600);">
+                        Tôi đồng ý với <a href="#" style="color: var(--primary-600);">Điều khoản sử dụng</a>
+                        và <a href="#" style="color: var(--primary-600);">Chính sách bảo mật</a>
+                    </span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="registerBtn">
+                <i class="fas fa-user-plus"></i>
+                Đăng ký
+            </button>
+        </form>
+
+        <div id="errorMessage" class="alert alert-danger" style="display: none; margin-top: 1rem;"></div>
+
+        <div
+            style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200);">
+            <p style="color: var(--gray-500);">
+                Đã có tài khoản?
+                <a href="login.html" style="color: var(--primary-600); font-weight: 600;">Đăng nhập</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        if (Utils.isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+
+        // Validation functions
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePhone(phone) {
+            if (!phone) return true; // Phone is optional
+            const phoneRegex = /^0\d{9}$/;
+            return phoneRegex.test(phone);
+        }
+
+        function validatePassword(password) {
+            // At least 6 chars, 1 uppercase, 1 lowercase, 1 number
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            const hasMinLength = password.length >= 6;
+            return { hasUppercase, hasLowercase, hasNumber, hasMinLength, isValid: hasUppercase && hasLowercase && hasNumber && hasMinLength };
+        }
+
+        function validateName(name) {
+            return name.trim().length >= 2;
+        }
+
+        // Real-time validation
+        document.getElementById('email').addEventListener('blur', function () {
+            const email = this.value.trim();
+            if (email && !validateEmail(email)) {
+                this.style.borderColor = 'var(--danger)';
+                showFieldError(this, 'Email không hợp lệ');
+            } else {
+                this.style.borderColor = 'var(--gray-200)';
+                hideFieldError(this);
+            }
+        });
+
+        document.getElementById('phone').addEventListener('blur', function () {
+            const phone = this.value.trim();
+            if (phone && !validatePhone(phone)) {
+                this.style.borderColor = 'var(--danger)';
+                showFieldError(this, 'SĐT phải bắt đầu bằng 0 và có 10 số');
+            } else {
+                this.style.borderColor = 'var(--gray-200)';
+                hideFieldError(this);
+            }
+        });
+
+        document.getElementById('password').addEventListener('input', function () {
+            const result = validatePassword(this.value);
+            updatePasswordStrength(result);
+        });
+
+        function showFieldError(input, message) {
+            let errorEl = input.parentElement.querySelector('.field-error');
+            if (!errorEl) {
+                errorEl = document.createElement('div');
+                errorEl.className = 'field-error';
+                errorEl.style.cssText = 'color: var(--danger); font-size: 0.75rem; margin-top: 0.25rem;';
+                input.parentElement.after(errorEl);
+            }
+            errorEl.textContent = message;
+        }
+
+        function hideFieldError(input) {
+            const errorEl = input.parentElement.parentElement.querySelector('.field-error');
+            if (errorEl) errorEl.remove();
+        }
+
+        function updatePasswordStrength(result) {
+            let strengthEl = document.getElementById('passwordStrength');
+            if (!strengthEl) {
+                strengthEl = document.createElement('div');
+                strengthEl.id = 'passwordStrength';
+                strengthEl.style.cssText = 'font-size: 0.75rem; margin-top: 0.5rem;';
+                document.getElementById('password').parentElement.parentElement.appendChild(strengthEl);
+            }
+
+            const checks = [
+                { ok: result.hasMinLength, text: 'Tối thiểu 6 ký tự' },
+                { ok: result.hasUppercase, text: 'Có chữ hoa (A-Z)' },
+                { ok: result.hasLowercase, text: 'Có chữ thường (a-z)' },
+                { ok: result.hasNumber, text: 'Có số (0-9)' }
+            ];
+
+            strengthEl.innerHTML = checks.map(c =>
+                `<span style="color: ${c.ok ? 'var(--success)' : 'var(--gray-400)'}; margin-right: 0.5rem;">
+                    <i class="fas ${c.ok ? 'fa-check' : 'fa-times'}"></i> ${c.text}
+                </span>`
+            ).join('<br>');
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorDiv = document.getElementById('errorMessage');
+            const btn = document.getElementById('registerBtn');
+
+            // Validate name
+            if (!validateName(name)) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Họ tên phải có ít nhất 2 ký tự';
+                errorDiv.style.display = 'flex';
+                return;
+            }
+
+            // Validate email
+            if (!validateEmail(email)) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Email không hợp lệ';
+                errorDiv.style.display = 'flex';
+                return;
+            }
+
+            // Validate phone
+            if (phone && !validatePhone(phone)) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> SĐT phải bắt đầu bằng 0 và có đúng 10 số';
+                errorDiv.style.display = 'flex';
+                return;
+            }
+
+            // Validate password strength
+            const pwResult = validatePassword(password);
+            if (!pwResult.isValid) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số';
+                errorDiv.style.display = 'flex';
+                return;
+            }
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Mật khẩu xác nhận không khớp';
+                errorDiv.style.display = 'flex';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await API.auth.register({
+                    name,
+                    email,
+                    password,
+                    phone
+                });
+
+                if (response.success) {
+                    Utils.showToast('Đăng ký thành công!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                }
+            } catch (error) {
+                errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message}`;
+                errorDiv.style.display = 'flex';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Đăng ký';
+            }
+        });
+    </script>
+</body>
+
+</html>

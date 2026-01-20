@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sản phẩm - Mihn Cosmetics Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="admin-logo-icon"><i class="fas fa-bottle-droplet"></i></div>
+                <span>Mihn Cosmetics</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="dashboard.html" class="admin-nav-link"><i
+                        class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+                <a href="products.html" class="admin-nav-link active"><i class="fas fa-box"></i><span>Sản
+                        phẩm</span></a>
+                <a href="categories.html" class="admin-nav-link"><i class="fas fa-tags"></i><span>Danh mục</span></a>
+                <a href="coupons.html" class="admin-nav-link"><i class="fas fa-ticket"></i><span>Mã giảm giá</span></a>
+                <a href="batches.html" class="admin-nav-link"><i class="fas fa-layer-group"></i><span>Lô hàng</span></a>
+                <a href="orders.html" class="admin-nav-link"><i class="fas fa-shopping-cart"></i><span>Đơn
+                        hàng</span></a>
+                <a href="../index.html" class="admin-nav-link" style="margin-top: auto;"><i
+                        class="fas fa-store"></i><span>Xem cửa hàng</span></a>
+                <a href="#" class="admin-nav-link" onclick="API.auth.logout()"><i
+                        class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 class="admin-page-title">Quản lý sản phẩm</h1>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Thêm sản phẩm
+                </button>
+            </header>
+
+            <div class="admin-content">
+                <!-- Filters -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <input type="text" class="form-input" id="searchInput" placeholder="Tìm kiếm..."
+                        style="max-width: 250px;">
+                    <select class="form-input form-select" id="categoryFilter" style="max-width: 200px;">
+                        <option value="">Tất cả danh mục</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="loadProducts()">
+                        <i class="fas fa-search"></i> Tìm kiếm
+                    </button>
+                </div>
+
+                <div class="admin-table-card">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Danh mục</th>
+                                <th>Giá</th>
+                                <th>Tồn kho</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 3rem;">
+                                    <div class="spinner" style="margin: 0 auto;"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="pagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem;">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Thêm sản phẩm</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Tên sản phẩm *</label>
+                            <input type="text" class="form-input" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Thương hiệu *</label>
+                            <input type="text" class="form-input" id="productBrand" required>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Danh mục *</label>
+                            <select class="form-input form-select" id="productCategory" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Giá (VNĐ) *</label>
+                            <input type="number" class="form-input" id="productPrice" required min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="forMihn Cosmeticsel">URL hình ảnh</label>
+                        <input type="url" class="form-input" id="productImage" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="forMihn Cosmeticsel">Mô tả</label>
+                        <textarea class="form-input" id="productDescription" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="forMihn Cosmeticsel">Thành phần</label>
+                        <textarea class="form-input" id="productIngredients" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="forMihn Cosmeticsel">Hướng dẫn sử dụng</label>
+                        <textarea class="form-input" id="productUsage" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-primary" onclick="saveProduct()">
+                    <i class="fas fa-save"></i> Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container"></div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        if (!Utils.isLoggedIn() || !Utils.isAdmin()) {
+            window.location.href = '../login.html';
+        }
+
+        let currentPage = 1;
+        let categories = [];
+
+        async function loadCategories() {
+            const response = await API.categories.getAll();
+            if (response.success) {
+                categories = response.data;
+                const filterSelect = document.getElementById('categoryFilter');
+                const formSelect = document.getElementById('productCategory');
+
+                categories.forEach(cat => {
+                    filterSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                    formSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                });
+            }
+        }
+
+        async function loadProducts(page = 1) {
+            currentPage = page;
+            const search = document.getElementById('searchInput').value;
+            const category = document.getElementById('categoryFilter').value;
+
+            try {
+                const response = await API.products.getAll({
+                    page,
+                    limit: 10,
+                    search,
+                    category_id: category
+                });
+
+                if (response.success) {
+                    renderProducts(response.data);
+                    renderPagination(response.pagination);
+                }
+            } catch (error) {
+                Utils.showToast('Không thể tải danh sách sản phẩm', 'error');
+            }
+        }
+
+        function renderProducts(products) {
+            const tbody = document.getElementById('productsTable');
+
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-500);">Không tìm thấy sản phẩm nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td>
+                        <div class="table-product">
+                            <div class="table-product-image">
+                                <img src="${p.image_url || 'https://via.placeholder.com/50'}" alt="">
+                            </div>
+                            <div class="table-product-info">
+                                <h4>${p.name}</h4>
+                                <p>${p.brand}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${p.category_name || '-'}</td>
+                    <td><strong>${Utils.formatCurrency(p.price)}</strong></td>
+                    <td>
+                        <span class="${p.stock > 10 ? 'stock-in' : p.stock > 0 ? 'stock-low' : 'stock-out'}">
+                            ${p.stock || 0}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${p.is_active ? 'status-active' : 'status-cancelled'}">
+                            ${p.is_active ? 'Đang bán' : 'Ngừng bán'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn edit" title="Sửa" onclick="editProduct(${p.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" title="Xóa" onclick="deleteProduct(${p.id}, '${p.name}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            if (pagination.totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                html += `<button class="btn ${i === pagination.page ? 'btn-primary' : 'btn-outline'} btn-sm" onclick="loadProducts(${i})">${i}</button>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Thêm sản phẩm';
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        async function editProduct(id) {
+            try {
+                const response = await API.products.getById(id);
+                if (response.success) {
+                    const p = response.data;
+                    document.getElementById('modalTitle').textContent = 'Sửa sản phẩm';
+                    document.getElementById('productId').value = p.id;
+                    document.getElementById('productName').value = p.name;
+                    document.getElementById('productBrand').value = p.brand;
+                    document.getElementById('productCategory').value = p.category_id;
+                    document.getElementById('productPrice').value = p.price;
+                    document.getElementById('productImage').value = p.image_url || '';
+                    document.getElementById('productDescription').value = p.description || '';
+                    document.getElementById('productIngredients').value = p.ingredients || '';
+                    document.getElementById('productUsage').value = p.usage_instructions || '';
+                    document.getElementById('productModal').classList.add('active');
+                }
+            } catch (error) {
+                Utils.showToast('Không thể tải thông tin sản phẩm', 'error');
+            }
+        }
+
+        async function saveProduct() {
+            const id = document.getElementById('productId').value;
+            const data = {
+                name: document.getElementById('productName').value,
+                brand: document.getElementById('productBrand').value,
+                category_id: document.getElementById('productCategory').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                image_url: document.getElementById('productImage').value,
+                description: document.getElementById('productDescription').value,
+                ingredients: document.getElementById('productIngredients').value,
+                usage_instructions: document.getElementById('productUsage').value,
+                is_active: true
+            };
+
+            try {
+                if (id) {
+                    await API.products.update(id, data);
+                    Utils.showToast('Cập nhật sản phẩm thành công!', 'success');
+                } else {
+                    await API.products.create(data);
+                    Utils.showToast('Thêm sản phẩm thành công!', 'success');
+                }
+                closeModal();
+                loadProducts(currentPage);
+            } catch (error) {
+                Utils.showToast(error.message, 'error');
+            }
+        }
+
+        async function deleteProduct(id, name) {
+            if (!confirm(`Bạn có chắc muốn xóa sản phẩm "${name}"?`)) return;
+
+            try {
+                await API.products.delete(id);
+                Utils.showToast('Đã xóa sản phẩm', 'success');
+                loadProducts(currentPage);
+            } catch (error) {
+                Utils.showToast(error.message, 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategories();
+            loadProducts();
+        });
+    </script>
+</body>
+
+</html>

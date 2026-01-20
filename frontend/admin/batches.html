@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý lô hàng - Mihn Cosmetics Admin</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="admin-logo-icon"><i class="fas fa-bottle-droplet"></i></div><span>Mihn Cosmetics</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="dashboard.html" class="admin-nav-link"><i
+                        class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+                <a href="products.html" class="admin-nav-link"><i class="fas fa-box"></i><span>Sản phẩm</span></a>
+                <a href="categories.html" class="admin-nav-link"><i class="fas fa-tags"></i><span>Danh mục</span></a>
+                <a href="coupons.html" class="admin-nav-link"><i class="fas fa-ticket"></i><span>Mã giảm giá</span></a>
+                <a href="batches.html" class="admin-nav-link active"><i class="fas fa-layer-group"></i><span>Lô
+                        hàng</span></a>
+                <a href="orders.html" class="admin-nav-link"><i class="fas fa-shopping-cart"></i><span>Đơn
+                        hàng</span></a>
+                <a href="../index.html" class="admin-nav-link" style="margin-top:auto;"><i
+                        class="fas fa-store"></i><span>Cửa hàng</span></a>
+            </nav>
+        </aside>
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 class="admin-page-title">Quản lý lô hàng</h1>
+                <button class="btn btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Thêm lô</button>
+            </header>
+            <div class="admin-content">
+                <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.5rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon success"><i class="fas fa-check"></i></div>
+                        <div class="stat-info">
+                            <h3 id="active">-</h3>
+                            <p>Hoạt động</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning"><i class="fas fa-clock"></i></div>
+                        <div class="stat-info">
+                            <h3 id="expiring">-</h3>
+                            <p>Sắp hết hạn</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon danger"><i class="fas fa-times"></i></div>
+                        <div class="stat-info">
+                            <h3 id="expired">-</h3>
+                            <p>Đã hết hạn</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-table-card">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Lô</th>
+                                <th>NSX</th>
+                                <th>HSD</th>
+                                <th>Còn</th>
+                                <th>Kho</th>
+                                <th>TT</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                            <tr>
+                                <td colspan="8" style="text-align:center;padding:2rem;">
+                                    <div class="spinner" style="margin:auto;"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div class="modal-overlay" id="modal">
+        <div class="modal" style="max-width:450px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Thêm lô hàng</h3><button class="modal-close" onclick="closeModal()"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+                    <div class="form-group"><label class="forMihn Cosmeticsel">Sản phẩm</label><select
+                            class="form-input form-select" id="product" required></select></div>
+                    <div class="form-group"><label class="forMihn Cosmeticsel">Số lô</label><input type="text"
+                            class="form-input" id="batch" required></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group"><label class="forMihn Cosmeticsel">NSX</label><input type="date"
+                                class="form-input" id="mfg" required></div>
+                        <div class="form-group"><label class="forMihn Cosmeticsel">HSD</label><input type="date"
+                                class="form-input" id="exp" required></div>
+                    </div>
+                    <div class="form-group"><label class="forMihn Cosmeticsel">Số lượng</label><input type="number"
+                            class="form-input" id="qty" required min="1"></div>
+                </form>
+            </div>
+            <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal()">Hủy</button><button
+                    class="btn btn-primary" onclick="save()">Lưu</button></div>
+        </div>
+    </div>
+    <div class="toast-container"></div>
+    <script src="../js/api.js"></script>
+    <script>
+        if (!Utils.isLoggedIn() || !Utils.isAdmin()) location.href = '../login.html';
+        let editingId = null;
+
+        async function init() {
+            const r = await API.products.getAll({ limit: 100 });
+            document.getElementById('product').innerHTML = '<option value="">Chọn...</option>' + r.data.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            load();
+        }
+
+        async function load() {
+            const r = await API.batches.getAll();
+            const d = r.data;
+            document.getElementById('active').textContent = d.filter(b => b.status === 'active' && b.days_until_expiry > 30).length;
+            document.getElementById('expiring').textContent = d.filter(b => b.days_until_expiry > 0 && b.days_until_expiry <= 30).length;
+            document.getElementById('expired').textContent = d.filter(b => b.days_until_expiry <= 0).length;
+            render(d);
+        }
+
+        function render(data) {
+            const t = document.getElementById('table');
+            if (!data.length) {
+                t.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:#888;">Không có dữ liệu</td></tr>';
+                return;
+            }
+            t.innerHTML = data.map(b => {
+                const days = b.days_until_expiry;
+                const cls = days > 30 ? 'stock-in' : days > 0 ? 'stock-low' : 'stock-out';
+                const st = days <= 0 ? 'expired' : b.status;
+                const bg = days <= 0 ? 'var(--danger-light)' : days <= 30 ? 'var(--warning-light)' : '';
+                return `<tr style="background:${bg}">
+                    <td>${b.product_name || '-'}</td>
+                    <td><b>${b.batch_number}</b></td>
+                    <td>${Utils.formatDate(b.manufacture_date)}</td>
+                    <td>${Utils.formatDate(b.expiry_date)}</td>
+                    <td class="${cls}">${days > 0 ? days + 'd' : 'Hết ' + Math.abs(days) + 'd'}</td>
+                    <td><b>${b.current_quantity || 0}</b></td>
+                    <td><span class="status-badge status-${st === 'active' ? 'active' : 'expired'}">${st === 'active' ? 'OK' : 'Hết'}</span></td>
+                    <td>
+                        <button class="action-btn edit" onclick="editBatch(${b.id}, ${b.product_id}, '${b.batch_number}', '${b.manufacture_date}', '${b.expiry_date}', ${b.current_quantity || 0})"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete" onclick="deleteBatch(${b.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function openModal() {
+            editingId = null;
+            document.getElementById('form').reset();
+            document.querySelector('.modal-title').textContent = 'Thêm lô hàng';
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function editBatch(id, productId, batchNumber, mfgDate, expDate, qty) {
+            editingId = id;
+            document.getElementById('product').value = productId;
+            document.getElementById('batch').value = batchNumber;
+            document.getElementById('mfg').value = mfgDate.split('T')[0];
+            document.getElementById('exp').value = expDate.split('T')[0];
+            document.getElementById('qty').value = qty;
+            document.querySelector('.modal-title').textContent = 'Sửa lô hàng';
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            editingId = null;
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        async function save() {
+            const data = {
+                product_id: document.getElementById('product').value,
+                batch_number: document.getElementById('batch').value,
+                manufacture_date: document.getElementById('mfg').value,
+                expiry_date: document.getElementById('exp').value,
+                initial_quantity: +document.getElementById('qty').value
+            };
+            try {
+                if (editingId) {
+                    await API.batches.update(editingId, data);
+                    Utils.showToast('Đã cập nhật lô hàng!', 'success');
+                } else {
+                    await API.batches.create(data);
+                    Utils.showToast('Thêm lô hàng thành công!', 'success');
+                }
+                closeModal();
+                load();
+            } catch (e) {
+                Utils.showToast(e.message, 'error');
+            }
+        }
+
+        async function deleteBatch(id) {
+            if (confirm('Bạn có chắc muốn xóa lô hàng này?')) {
+                try {
+                    await API.batches.delete(id);
+                    Utils.showToast('Đã xóa lô hàng', 'success');
+                    load();
+                } catch (e) {
+                    Utils.showToast(e.message, 'error');
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

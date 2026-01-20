@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng - Mihn Cosmetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-bottle-droplet"></i></span>
+                Mihn Cosmetics
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Trang chủ</a>
+                <a href="products.html" class="nav-link">Sản phẩm</a>
+            </nav>
+            <div class="nav-icons">
+                <a href="cart.html" class="nav-icon-btn" style="color: var(--primary-600);">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-badge">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="section" style="min-height: 70vh;">
+        <div class="container">
+            <h1 style="margin-bottom: 2rem;"><i class="fas fa-shopping-cart" style="color: var(--primary-500);"></i> Giỏ
+                hàng</h1>
+
+            <div id="cartContent">
+                <!-- Loading -->
+                <div style="text-align: center; padding: 3rem;">
+                    <div class="spinner" style="margin: 0 auto;"></div>
+                    <p style="margin-top: 1rem; color: var(--gray-500);">Đang tải giỏ hàng...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; margin-top: 0;">
+                <p>&copy; 2026 Mihn Cosmetics. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        let cartData = null;
+
+        async function loadCart() {
+            if (!Utils.isLoggedIn()) {
+                document.getElementById('cartContent').innerHTML = `
+                    <div style="text-align: center; padding: 4rem;">
+                        <i class="fas fa-shopping-bag" style="font-size: 4rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
+                        <h2 style="color: var(--gray-500); margin-bottom: 1rem;">Vui lòng đăng nhập</h2>
+                        <p style="color: var(--gray-400); margin-bottom: 2rem;">Đăng nhập để xem giỏ hàng của bạn</p>
+                        <a href="login.html" class="btn btn-primary btn-lg">Đăng nhập</a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await API.cart.get();
+                if (response.success) {
+                    cartData = response.data;
+                    renderCart();
+                }
+            } catch (error) {
+                document.getElementById('cartContent').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Không thể tải giỏ hàng. Vui lòng thử lại.
+                    </div>
+                `;
+            }
+        }
+
+        function renderCart() {
+            if (!cartData || cartData.items.length === 0) {
+                document.getElementById('cartContent').innerHTML = `
+                    <div style="text-align: center; padding: 4rem;">
+                        <i class="fas fa-shopping-bag" style="font-size: 4rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
+                        <h2 style="color: var(--gray-500); margin-bottom: 1rem;">Giỏ hàng trống</h2>
+                        <p style="color: var(--gray-400); margin-bottom: 2rem;">Hãy thêm sản phẩm yêu thích vào giỏ hàng</p>
+                        <a href="products.html" class="btn btn-primary btn-lg">Tiếp tục mua sắm</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const itemsHtml = cartData.items.map(item => `
+                <div class="cart-item" data-id="${item.id}">
+                    <div class="cart-item-image">
+                        <img src="${item.image_url || 'https://via.placeholder.com/120x120?text=Product'}" alt="${item.name}">
+                    </div>
+                    <div class="cart-item-details" style="flex: 1;">
+                        <h4 class="cart-item-name">${item.name}</h4>
+                        <p class="cart-item-brand">${item.brand}</p>
+                        <p class="cart-item-price">${Utils.formatCurrency(item.price)}</p>
+                        ${item.available_stock !== null && item.quantity > item.available_stock ?
+                    `<span class="badge badge-danger">Vượt quá số lượng còn lại (${item.available_stock})</span>` : ''}
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="quantity-control">
+                            <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})"><i class="fas fa-minus"></i></button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div style="font-weight: 700; color: var(--primary-600); min-width: 120px; text-align: right;">
+                            ${Utils.formatCurrency(item.price * item.quantity)}
+                        </div>
+                        <button class="btn btn-icon btn-ghost" style="color: var(--danger);" onclick="removeItem(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('cartContent').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 380px; gap: 2rem;">
+                    <div>
+                        ${itemsHtml}
+                    </div>
+                    <div class="cart-summary">
+                        <h3 style="margin-bottom: 1.5rem;">Tóm tắt đơn hàng</h3>
+                        <div class="cart-summary-row">
+                            <span>Số lượng sản phẩm</span>
+                            <span>${cartData.itemCount} sản phẩm</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Tạm tính</span>
+                            <span>${Utils.formatCurrency(cartData.total)}</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Phí vận chuyển</span>
+                            <span>${cartData.total >= 500000 ? 'Miễn phí' : Utils.formatCurrency(30000)}</span>
+                        </div>
+                        <div class="cart-summary-row" style="font-size: 1.25rem; padding-top: 1rem;">
+                            <span>Tổng cộng</span>
+                            <span>${Utils.formatCurrency(cartData.total >= 500000 ? cartData.total : cartData.total + 30000)}</span>
+                        </div>
+                        
+                        <button class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1.5rem;" onclick="checkout()">
+                            <i class="fas fa-credit-card"></i>
+                            Tiến hành thanh toán
+                        </button>
+                        <a href="products.html" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">
+                            Tiếp tục mua sắm
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function updateQuantity(itemId, newQuantity) {
+            if (newQuantity < 1) {
+                removeItem(itemId);
+                return;
+            }
+
+            try {
+                await API.cart.update(itemId, newQuantity);
+                loadCart();
+                Utils.updateCartBadge();
+            } catch (error) {
+                Utils.showToast(error.message, 'error');
+            }
+        }
+
+        async function removeItem(itemId) {
+            try {
+                await API.cart.remove(itemId);
+                Utils.showToast('Đã xóa sản phẩm khỏi giỏ hàng', 'success');
+                loadCart();
+                Utils.updateCartBadge();
+            } catch (error) {
+                Utils.showToast(error.message, 'error');
+            }
+        }
+
+        function checkout() {
+            window.location.href = 'checkout.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCart);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+

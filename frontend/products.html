@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản phẩm - Mihn Cosmetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-bottle-droplet"></i></span>
+                Mihn Cosmetics
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Trang chủ</a>
+                <a href="products.html" class="nav-link active">Sản phẩm</a>
+                <a href="products.html?category=1" class="nav-link">Chăm sóc da</a>
+                <a href="products.html?category=2" class="nav-link">Trang điểm</a>
+                <a href="products.html?category=4" class="nav-link">Nước hoa</a>
+                <a href="products.html?category=6" class="nav-link">Chăm sóc tóc</a>
+            </nav>
+
+            <div class="nav-icons">
+                <a href="cart.html" class="nav-icon-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-badge">0</span>
+                </a>
+                <div class="auth-buttons flex gap-sm">
+                    <a href="login.html" class="btn btn-outline btn-sm">Đăng nhập</a>
+                </div>
+                <div class="user-menu flex items-center gap-sm" style="display: none;">
+                    <a href="orders.html" class="nav-icon-btn"><i class="fas fa-box"></i></a>
+                    <button class="btn btn-ghost btn-sm" onclick="API.auth.logout()">Đăng xuất</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section style="background: var(--gradient-secondary); padding: 3rem 0; color: white;">
+        <div class="container">
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Sản Phẩm</h1>
+            <nav style="font-size: 0.875rem; opacity: 0.8;">
+                <a href="index.html" style="color: white;">Trang chủ</a> /
+                <span id="breadcrumb">Tất cả sản phẩm</span>
+            </nav>
+        </div>
+    </section>
+
+    <main class="section" style="padding-top: 2rem;">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 280px 1fr; gap: 2rem;">
+                <!-- Sidebar Filters -->
+                <aside>
+                    <div style="background: white; border-radius: 1rem; padding: 1.5rem; position: sticky; top: 100px;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Bộ lọc</h3>
+
+                        <!-- Search -->
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Tìm kiếm</label>
+                            <input type="text" class="form-input" id="searchInput" placeholder="Tên sản phẩm...">
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Danh mục</label>
+                            <select class="form-input form-select" id="categoryFilter">
+                                <option value="">Tất cả danh mục</option>
+                            </select>
+                        </div>
+
+                        <!-- Brands -->
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Thương hiệu</label>
+                            <select class="form-input form-select" id="brandFilter">
+                                <option value="">Tất cả thương hiệu</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort -->
+                        <div class="form-group">
+                            <label class="forMihn Cosmeticsel">Sắp xếp</label>
+                            <select class="form-input form-select" id="sortFilter">
+                                <option value="">Mặc định</option>
+                                <option value="price_asc">Giá: Thấp đến cao</option>
+                                <option value="price_desc">Giá: Cao đến thấp</option>
+                                <option value="name_asc">Tên: A-Z</option>
+                                <option value="newest">Mới nhất</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%;" onclick="applyFilters()">
+                            <i class="fas fa-filter"></i> Áp dụng
+                        </button>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;"
+                            onclick="clearFilters()">
+                            Xóa bộ lọc
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Products -->
+                <div>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <p id="productCount" style="color: var(--gray-500);">Đang tải...</p>
+                    </div>
+
+                    <div class="products-grid" id="productsGrid">
+                        <!-- Loading skeleton -->
+                        <div class="product-card">
+                            <div class="skeleton" style="height: 300px;"></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="skeleton" style="height: 300px;"></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="skeleton" style="height: 300px;"></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="skeleton" style="height: 300px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div id="pagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; margin-top: 0;">
+                <p>&copy; 2026 Mihn Cosmetics. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        let currentPage = 1;
+        const limit = 12;
+
+        // Load filters
+        async function loadFilters() {
+            try {
+                // Load categories
+                const catResponse = await API.categories.getAll();
+                if (catResponse.success) {
+                    const catSelect = document.getElementById('categoryFilter');
+                    catResponse.data.forEach(cat => {
+                        catSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                    });
+                }
+
+                // Load brands
+                const brandResponse = await API.products.getBrands();
+                if (brandResponse.success) {
+                    const brandSelect = document.getElementById('brandFilter');
+                    brandResponse.data.forEach(brand => {
+                        brandSelect.innerHTML += `<option value="${brand}">${brand}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading filters:', error);
+            }
+        }
+
+        // Load products
+        async function loadProducts(page = 1) {
+            try {
+                const params = new URLSearchParams(window.location.search);
+
+                const queryParams = {
+                    page,
+                    limit,
+                    ...(params.get('category') && { category_id: params.get('category') }),
+                    ...(params.get('brand') && { brand: params.get('brand') }),
+                    ...(params.get('search') && { search: params.get('search') }),
+                    ...(params.get('sort') && { sort: params.get('sort') })
+                };
+
+                // Update filters from URL
+                if (params.get('category')) {
+                    document.getElementById('categoryFilter').value = params.get('category');
+                }
+                if (params.get('search')) {
+                    document.getElementById('searchInput').value = params.get('search');
+                }
+                if (params.get('sort')) {
+                    document.getElementById('sortFilter').value = params.get('sort');
+                }
+
+                const response = await API.products.getAll(queryParams);
+
+                if (response.success) {
+                    renderProducts(response.data);
+                    document.getElementById('productCount').textContent =
+                        `Hiển thị ${response.data.length} / ${response.pagination.total} sản phẩm`;
+                    renderPagination(response.pagination);
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML =
+                    '<p style="grid-column: span 4; text-align: center; color: var(--gray-500);">Không thể tải sản phẩm</p>';
+            }
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('productsGrid');
+
+            if (products.length === 0) {
+                grid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: var(--gray-500); padding: 3rem;">Không tìm thấy sản phẩm nào</p>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => {
+                const avgRating = product.avg_rating ? parseFloat(product.avg_rating).toFixed(1) : 0;
+                const reviewCount = product.review_count || 0;
+                const starsHtml = renderStars(avgRating);
+
+                return `
+                <div class="product-card">
+                    ${product.stock > 0 ? '' : '<span class="product-badge badge-out-of-stock">Hết hàng</span>'}
+                    <button class="product-wishlist">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <div class="product-image">
+                        <img src="${product.image_url || 'https://via.placeholder.com/300x300?text=Product'}" alt="${product.name}">
+                        <div class="product-quick-actions">
+                            <button class="quick-action-btn" onclick="addToCart(${product.id})">
+                                <i class="fas fa-shopping-cart"></i> Thêm
+                            </button>
+                            <a href="product-detail.html?id=${product.id}" class="quick-action-btn">
+                                <i class="fas fa-eye"></i> Xem
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-brand">${product.brand}</span>
+                        <a href="product-detail.html?id=${product.id}">
+                            <h3 class="product-name">${product.name}</h3>
+                        </a>
+                        <div class="product-rating" style="display: flex; align-items: center; gap: 0.25rem; margin: 0.25rem 0; font-size: 0.8125rem;">
+                            <span style="color: #fbbf24;">${starsHtml}</span>
+                            <span style="color: var(--gray-500);">(${reviewCount})</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price-current">${Utils.formatCurrency(product.price)}</span>
+                        </div>
+                        <div class="product-stock ${product.stock > 10 ? 'stock-in' : product.stock > 0 ? 'stock-low' : 'stock-out'}">
+                            <i class="fas fa-circle" style="font-size: 6px;"></i>
+                            ${product.stock > 10 ? 'Còn hàng' : product.stock > 0 ? `Còn ${product.stock}` : 'Hết hàng'}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function renderStars(rating) {
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    html += '<i class="fas fa-star"></i>';
+                } else if (i - 0.5 <= rating) {
+                    html += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    html += '<i class="far fa-star"></i>';
+                }
+            }
+            return html;
+        }
+
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            if (pagination.totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                html += `
+                    <button class="btn ${i === pagination.page ? 'btn-primary' : 'btn-outline'} btn-sm"
+                            onclick="goToPage(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadProducts(page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function addToCart(productId) {
+            if (!Utils.isLoggedIn()) {
+                Utils.showToast('Vui lòng đăng nhập để thêm vào giỏ hàng', 'warning');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await API.cart.add(productId, 1);
+                if (response.success) {
+                    Utils.showToast('Đã thêm vào giỏ hàng!', 'success');
+                    Utils.updateCartBadge();
+                }
+            } catch (error) {
+                Utils.showToast(error.message, 'error');
+            }
+        }
+
+        function applyFilters() {
+            const params = new URLSearchParams();
+
+            const category = document.getElementById('categoryFilter').value;
+            const brand = document.getElementById('brandFilter').value;
+            const search = document.getElementById('searchInput').value;
+            const sort = document.getElementById('sortFilter').value;
+
+            if (category) params.set('category', category);
+            if (brand) params.set('brand', brand);
+            if (search) params.set('search', search);
+            if (sort) params.set('sort', sort);
+
+            window.location.href = `products.html${params.toString() ? '?' + params.toString() : ''}`;
+        }
+
+        function clearFilters() {
+            window.location.href = 'products.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFilters();
+            loadProducts();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Mihn Cosmetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body
+    style="background: var(--gradient-secondary); min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div
+        style="max-width: 450px; width: 90%; background: white; border-radius: 1.5rem; padding: 2.5rem; box-shadow: var(--shadow-2xl);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a href="index.html" class="logo" style="justify-content: center; font-size: 2rem;">
+                <span class="logo-icon"><i class="fas fa-bottle-droplet"></i></span>
+                Mihn Cosmetics
+            </a>
+            <h1 style="font-size: 1.5rem; margin-top: 1rem;">Chào mừng trở lại!</h1>
+            <p style="color: var(--gray-500);">Đăng nhập để tiếp tục mua sắm</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="forMihn Cosmeticsel">Email</label>
+                <div class="form-input-icon">
+                    <span class="icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-input" id="email" placeholder="your@email.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="forMihn Cosmeticsel">Mật khẩu</label>
+                <div class="form-input-icon">
+                    <span class="icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-input" id="password" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="remember">
+                    <span style="font-size: 0.875rem; color: var(--gray-600);">Ghi nhớ đăng nhập</span>
+                </label>
+                <a href="#" style="font-size: 0.875rem; color: var(--primary-600);">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                Đăng nhập
+            </button>
+        </form>
+
+        <div id="errorMessage" class="alert alert-danger" style="display: none; margin-top: 1rem;"></div>
+
+        <div
+            style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200);">
+            <p style="color: var(--gray-500);">
+                Chưa có tài khoản?
+                <a href="register.html" style="color: var(--primary-600); font-weight: 600;">Đăng ký ngay</a>
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem;">
+            <p style="font-size: 0.75rem; color: var(--gray-400);">
+
+            </p>
+        </div>
+    </div>
+
+    <div class="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Redirect if already logged in
+        if (Utils.isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            const btn = document.getElementById('loginBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await API.auth.login(email, password);
+
+                if (response.success) {
+                    Utils.showToast('Đăng nhập thành công!', 'success');
+
+                    // Redirect based on role
+                    setTimeout(() => {
+                        if (response.data.user.role === 'admin') {
+                            window.location.href = 'admin/dashboard.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
+                    }, 1000);
+                }
+            } catch (error) {
+                errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message}`;
+                errorDiv.style.display = 'flex';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Đăng nhập';
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+

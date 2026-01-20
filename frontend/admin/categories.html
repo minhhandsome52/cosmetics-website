@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý danh mục - Mihn Cosmetics Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="admin-logo-icon"><i class="fas fa-bottle-droplet"></i></div>
+                <span>Mihn Cosmetics</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="dashboard.html" class="admin-nav-link"><i
+                        class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+                <a href="products.html" class="admin-nav-link"><i class="fas fa-box"></i><span>Sản phẩm</span></a>
+                <a href="categories.html" class="admin-nav-link active"><i class="fas fa-tags"></i><span>Danh
+                        mục</span></a>
+                <a href="coupons.html" class="admin-nav-link"><i class="fas fa-ticket"></i><span>Mã giảm giá</span></a>
+                <a href="batches.html" class="admin-nav-link"><i class="fas fa-layer-group"></i><span>Lô hàng</span></a>
+                <a href="orders.html" class="admin-nav-link"><i class="fas fa-shopping-cart"></i><span>Đơn
+                        hàng</span></a>
+                <a href="../index.html" class="admin-nav-link" style="margin-top: auto;"><i
+                        class="fas fa-store"></i><span>Xem cửa hàng</span></a>
+                <a href="#" class="admin-nav-link" onclick="API.auth.logout()"><i
+                        class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 class="admin-page-title">Quản lý danh mục</h1>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Thêm danh mục
+                </button>
+            </header>
+
+            <div class="admin-content">
+                <div class="admin-table-card">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Danh mục</th>
+                                <th>Mô tả</th>
+                                <th>Số sản phẩm</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTable">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 3rem;">
+                                    <div class="spinner" style="margin: 0 auto;"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Thêm danh mục</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <input type="hidden" id="categoryId">
+                    <div class="form-group">
+                        <label class="form-label">Tên danh mục *</label>
+                        <input type="text" class="form-input" id="categoryName" required placeholder="VD: Chăm sóc da">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mô tả</label>
+                        <textarea class="form-input" id="categoryDescription" rows="3"
+                            placeholder="Mô tả ngắn về danh mục..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL hình ảnh</label>
+                        <input type="url" class="form-input" id="categoryImage"
+                            placeholder="https://example.com/image.jpg">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-primary" onclick="saveCategory()">
+                    <i class="fas fa-save"></i> Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container"></div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        if (!Utils.isLoggedIn() || !Utils.isAdmin()) {
+            window.location.href = '../login.html';
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await API.categories.getAll();
+                if (response.success) {
+                    renderCategories(response.data);
+                }
+            } catch (error) {
+                Utils.showToast('Không thể tải danh mục', 'error');
+            }
+        }
+
+        // Icon mapping for categories
+        const categoryIcons = {
+            'Chăm sóc da': 'fa-spa',
+            'Trang điểm': 'fa-wand-magic-sparkles',
+            'Chăm sóc tóc': 'fa-scissors',
+            'Nước hoa': 'fa-spray-can-sparkles',
+            'Chăm sóc cơ thể': 'fa-hand-sparkles'
+        };
+
+        function getCategoryIcon(name) {
+            return categoryIcons[name] || 'fa-tag';
+        }
+
+        function renderCategories(categories) {
+            const tbody = document.getElementById('categoriesTable');
+
+            if (categories.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 3rem; color: var(--gray-500);">Chưa có danh mục nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = categories.map(cat => {
+                const iconClass = getCategoryIcon(cat.name);
+                const hasValidImage = cat.image_url && cat.image_url.startsWith('http');
+
+                return `
+                <tr>
+                    <td><strong>#${cat.id}</strong></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            ${hasValidImage
+                        ? `<img src="${cat.image_url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+                                   <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%); display: none; align-items: center; justify-content: center;"><i class="fas ${iconClass}" style="color: var(--primary-500);"></i></div>`
+                        : `<div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%); display: flex; align-items: center; justify-content: center;"><i class="fas ${iconClass}" style="color: var(--primary-500);"></i></div>`
+                    }
+                            <span style="font-weight: 600;">${cat.name}</span>
+                        </div>
+                    </td>
+                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--gray-500);">
+                        ${cat.description || '-'}
+                    </td>
+                    <td>
+                        <span class="status-badge status-active">${cat.product_count || 0} sản phẩm</span>
+                    </td>
+                    <td>
+                        <button class="action-btn edit" title="Sửa" onclick="editCategory(${cat.id}, '${cat.name.replace(/'/g, "\\'")}', '${(cat.description || '').replace(/'/g, "\\'")}', '${cat.image_url || ''}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" title="Xóa" onclick="deleteCategory(${cat.id}, '${cat.name.replace(/'/g, "\\'")}', ${cat.product_count || 0})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Thêm danh mục';
+            document.getElementById('categoryForm').reset();
+            document.getElementById('categoryId').value = '';
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        function editCategory(id, name, description, image_url) {
+            document.getElementById('modalTitle').textContent = 'Sửa danh mục';
+            document.getElementById('categoryId').value = id;
+            document.getElementById('categoryName').value = name;
+            document.getElementById('categoryDescription').value = description;
+            document.getElementById('categoryImage').value = image_url;
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        async function saveCategory() {
+            const id = document.getElementById('categoryId').value;
+            const data = {
+                name: document.getElementById('categoryName').value.trim(),
+                description: document.getElementById('categoryDescription').value.trim(),
+                image_url: document.getElementById('categoryImage').value.trim()
+            };
+
+            if (!data.name) {
+                Utils.showToast('Vui lòng nhập tên danh mục', 'warning');
+                return;
+            }
+
+            try {
+                Utils.showLoading();
+                if (id) {
+                    await API.categories.update(id, data);
+                    Utils.showToast('Cập nhật danh mục thành công!', 'success');
+                } else {
+                    await API.categories.create(data);
+                    Utils.showToast('Thêm danh mục thành công!', 'success');
+                }
+                Utils.hideLoading();
+                closeModal();
+                loadCategories();
+            } catch (error) {
+                Utils.hideLoading();
+                Utils.showToast(error.message || 'Lỗi khi lưu danh mục', 'error');
+            }
+        }
+
+        async function deleteCategory(id, name, productCount) {
+            if (productCount > 0) {
+                Utils.showToast(`Không thể xóa danh mục "${name}" vì còn ${productCount} sản phẩm`, 'error');
+                return;
+            }
+
+            if (!confirm(`Bạn có chắc muốn xóa danh mục "${name}"?`)) return;
+
+            try {
+                Utils.showLoading();
+                await API.categories.delete(id);
+                Utils.hideLoading();
+                Utils.showToast('Đã xóa danh mục', 'success');
+                loadCategories();
+            } catch (error) {
+                Utils.hideLoading();
+                Utils.showToast(error.message || 'Không thể xóa danh mục', 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('categoryModal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCategories);
+    </script>
+</body>
+
+</html>

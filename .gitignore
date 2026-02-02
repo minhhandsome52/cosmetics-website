@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Files to exclude from git
+README.md
+file.md
+bao_cao*.md
+read.md
+
+# Data files (optional - remove if you want to track)
+*.txt

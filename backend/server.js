@@ -21,6 +21,8 @@ app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/coupons', require('./routes/couponRoutes'));
+app.use('/api/customers', require('./routes/customerRoutes'));
+app.use('/api/chat', require('./routes/chatRoutes'));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -47,6 +49,6 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log(`📚 API Docs: http://localhost:${PORT}/api/health`);
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`API Docs: http://localhost:${PORT}/api/health`);
 });

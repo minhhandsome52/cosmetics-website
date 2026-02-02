@@ -1,85 +1,1351 @@
-# GlowUp - Hệ Thống Quản Lý Mỹ Phẩm
+STT
 
-Hệ thống thương mại điện tử quản lý mỹ phẩm với các tính năng đặc thù về quản lý lô hàng và hạn sử dụng.
+Tỉnh, TP cũ
 
-## 🚀 Cài Đặt & Chạy
+Xã phường trước sáp nhập
 
-### 1. Database (MySQL)
+Xã phường mới của TPHCM
 
-```sql
--- Tạo database
-CREATE DATABASE cosmetics_db;
-USE cosmetics_db;
+1
 
--- Import schema và dữ liệu mẫu
-SOURCE database/schema.sql;
-SOURCE database/seed.sql;
-```
+TP.HCM
 
-### 2. Backend
+Phường Bến Nghé, một phần phường Đa Kao và Nguyễn Thái Bình
 
-```bash
-cd backend
+Phường Sài Gòn
 
-# Cấu hình .env
-# Sửa DB_PASSWORD theo MySQL của bạn
+2
 
-# Cài đặt dependencies (đã cài)
-npm install
+TP.HCM
 
-# Chạy server
-npm run dev
-```
+Phường Tân Định và một phần phường Đa Kao
 
-Server chạy tại: http://localhost:3000
+Phường Tân Định
 
-### 3. Frontend
+3
 
-Mở file `frontend/index.html` bằng Live Server (VS Code Extension)
+TP.HCM
 
-## 📋 Tài Khoản Test
+Các phường Bến Thành, Phạm Ngũ Lão, một phần phường Cầu Ông Lãnh và Nguyễn Thái Bình
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@mypham.com | 123456 |
-| Customer | nguyenvana@gmail.com | 123456 |
+Phường Bến Thành
 
-## 🎯 Tính Năng Chính
+4
 
-### Khách hàng
-- Xem sản phẩm theo danh mục, tìm kiếm
-- Xem chi tiết (thành phần, công dụng, HSD)
-- Thêm giỏ hàng, đặt hàng
-- Xem lịch sử đơn hàng
+TP.HCM
 
-### Quản trị viên
-- Dashboard với cảnh báo lô sắp/đã hết hạn
-- Quản lý sản phẩm (CRUD)
-- Quản lý lô hàng và tồn kho
-- Quản lý đơn hàng
+Các phường Nguyễn Cư Trinh, Cầu Kho, Cô Giang, một phần phường Cầu Ông Lãnh
 
-### Nghiệp vụ đặc thù
-- **FEFO**: Xuất kho theo lô có HSD gần nhất
-- **Kiểm tra HSD**: Không cho phép bán sản phẩm hết hạn
-- **Cảnh báo**: Hiển thị lô sắp hết hạn (≤30 ngày)
+Phường Cầu Ông Lãnh
 
-## 📁 Cấu Trúc
+5
 
-```
-web mypham/
-├── backend/          # Node.js + Express API
-├── frontend/         # HTML + CSS + JS
-│   ├── admin/        # Giao diện quản trị
-│   ├── css/          # Styles
-│   └── js/           # API module
-└── database/         # SQL scripts
-```
+TP.HCM
 
-## 🔗 API Endpoints
+Các phường 1, 2, 3, 5, một phần phường 4 (Quận 3)
 
-- `POST /api/auth/register` - Đăng ký
-- `POST /api/auth/login` - Đăng nhập
-- `GET /api/products` - Danh sách sản phẩm
-- `GET /api/categories` - Danh mục
-- `GET /api/batches/expiring` - Lô sắp hết hạn
-- `POST /api/orders` - Đặt hàng (kiểm tra HSD)
+Phường Bàn Cờ
+
+6
+
+TP.HCM
+
+Các phường Võ Thị Sáu, một phần phường 4 (Quận 3)
+
+Phường Xuân Hòa
+
+7
+
+TP.HCM
+
+Các phường 9, 11, 12, 14 (Quận 3)
+
+Phường Nhiêu Lộc
+
+8
+
+TP.HCM
+
+Các phường 13, 16, 18, một phần phường 15 (Quận 4)
+
+Phường Xóm Chiếu
+
+9
+
+TP.HCM
+
+Các phường 8, 9, một phần phường 2, 4 và 15 (Quận 4)
+
+Phường Khánh Hội
+
+10
+
+TP.HCM
+
+Các phường 1, 3, một phần phường 2 và 4 (Quận 4)
+
+Phường Vĩnh Hội
+
+11
+
+TP.HCM
+
+Các phường 1, 2, 4 (Quận 5)
+
+Phường Chợ Quán
+
+12
+
+TP.HCM
+
+Các phường 5, 7, 9 (Quận 5)
+
+Phường An Đông
+
+13
+
+TP.HCM
+
+Các phường 11, 12, 13, 14 (Quận 5)
+
+Phường Chợ Lớn
+
+14
+
+TP.HCM
+
+Các phường 2, 9 (Quận 6)
+
+Phường Bình Tây
+
+15
+
+TP.HCM
+
+Các phường 1, 7, 8 (Quận 6)
+
+Phường Bình Tiên
+
+16
+
+TP.HCM
+
+Các phường 10, 11 (Quận 6), một phần phường 16 (Quận 8)
+
+Phường Bình Phú
+
+17
+
+TP.HCM
+
+Các phường 12, 13, 14 (Quận 6)
+
+Phường Phú Lâm
+
+18
+
+TP.HCM
+
+Các phường Bình Thuận, Tân Thuận Đông, Tân Thuận Tây
+
+Phường Tân Thuận
+
+19
+
+TP.HCM
+
+Phường Phú Thuận và một phần phường Phú Mỹ (Quận 7)
+
+Phường Phú Thuận
+
+20
+
+TP.HCM
+
+Các phường Tân Phú và một phần phường Phú Mỹ (Quận 7)
+
+Phường Tân Mỹ
+
+21
+
+TP.HCM
+
+Các phường Tân Phong, Tân Quy, Tân Kiểng, Tân Hưng
+
+Phường Tân Hưng
+
+22
+
+TP.HCM
+
+Các phường 4 (Quận 8), Rạch Ông, Hưng Phú và một phần phường 5 (Quận 8)
+
+Phường Chánh Hưng
+
+23
+
+TP.HCM
+
+Các phường 14, 15, Xóm Củi và một phần phường 16 (Quận 8)
+
+Phường Phú Định
+
+24
+
+TP.HCM
+
+Phường 6, một phần phường 5 và 7 (Quận 8), xã An Phú Tây (Huyện Bình Chánh)
+
+Phường Bình Đông
+
+25
+
+TP.HCM
+
+Các phường 6, 8, một phần phường 14 (Quận 10)
+
+Phường Diên Hồng
+
+26
+
+TP.HCM
+
+Các phường 1, 2, 4, 9, 10 (Quận 10)
+
+Phường Vườn Lài
+
+27
+
+TP.HCM
+
+Các phường 12, 13, 15, một phần phường 14 (Quận 10)
+
+Phường Hòa Hưng
+
+28
+
+TP.HCM
+
+Các phường 1, 7, 16 (Quận 11)
+
+Phường Minh Phụng
+
+29
+
+TP.HCM
+
+Các phường 3, 10, một phần phường 8 (Quận 11)
+
+Phường Bình Thới
+
+30
+
+TP.HCM
+
+Các phường 5, 14 (Quận 11)
+
+Phường Hòa Bình
+
+31
+
+TP.HCM
+
+Các phường 11, 15, một phần phường 8 (Quận 11)
+
+Phường Phú Thọ
+
+32
+
+TP.HCM
+
+Các phường Tân Thới Nhất, Tân Hưng Thuận, Đông Hưng Thuận
+
+Phường Đông Hưng Thuận
+
+33
+
+TP.HCM
+
+Các phường Tân Chánh Hiệp, Trung Mỹ Tây
+
+Phường Trung Mỹ Tây
+
+34
+
+TP.HCM
+
+Các phường Hiệp Thành (Quận 12), Tân Thới Hiệp
+
+Phường Tân Thới Hiệp
+
+35
+
+TP.HCM
+
+Các phường Thạnh Xuân, Thới An
+
+Phường Thới An
+
+36
+
+TP.HCM
+
+Các phường Thạnh Lộc, An Phú Đông
+
+Phường An Phú Đông
+
+37
+
+TP.HCM
+
+Các phường Bình Trị Đông B, An Lạc A, An Lạc
+
+Phường An Lạc
+
+38
+
+TP.HCM
+
+Các phường Bình Hưng Hòa B, một phần phường Bình Trị Đông A và Tân Tạo
+
+Phường Bình Tân
+
+39
+
+TP.HCM
+
+Xã Tân Kiên, một phần phường Tân Tạo A và Tân Tạo
+
+Phường Tân Tạo
+
+40
+
+TP.HCM
+
+Các phường Bình Trị Đông, một phần phường Bình Hưng Hòa A và Bình Trị Đông A
+
+Phường Bình Trị Đông
+
+41
+
+TP.HCM
+
+Các phường Bình Hưng Hòa, một phần phường Sơn Kỳ và Bình Hưng Hòa A
+
+Phường Bình Hưng Hòa
+
+42
+
+TP.HCM
+
+Các phường 1, 2, 7, 17 (quận Bình Thạnh)
+
+Phường Gia Định
+
+43
+
+TP.HCM
+
+Các phường 12, 14, 26 (quận Bình Thạnh)
+
+Phường Bình Thạnh
+
+44
+
+TP.HCM
+
+Các phường 5, 11, 13 (quận Bình Thạnh)
+
+Phường Bình Lợi Trung
+
+45
+
+TP.HCM
+
+Các phường 19, 22, 25
+
+Phường Thạnh Mỹ Tây
+
+46
+
+TP.HCM
+
+Các phường 27, 28
+
+Phường Bình Quới
+
+47
+
+TP.HCM
+
+Các phường 1, 3 (quận Gò Vấp)
+
+Phường Hạnh Thông
+
+48
+
+TP.HCM
+
+Các phường 5, 6 (quận Gò Vấp)
+
+Phường An Nhơn
+
+49
+
+TP.HCM
+
+Các phường 10, 17 (quận Gò Vấp)
+
+Phường Gò Vấp
+
+50
+
+TP.HCM
+
+Các phường 15, 16 (quận Gò Vấp)
+
+Phường An Hội Đông
+
+51
+
+TP.HCM
+
+Các phường 8, 11 (quận Gò Vấp)
+
+Phường Thông Tây Hội
+
+52
+
+TP.HCM
+
+Các phường 12, 14 (quận Gò Vấp)
+
+Phường An Hội Tây
+
+53
+
+TP.HCM
+
+Các phường 4, 5, 9 (quận Phú Nhuận)
+
+Phường Đức Nhuận
+
+54
+
+TP.HCM
+
+Các phường 1, 2, 7, một phần phường 15 (quận Phú Nhuận)
+
+Phường Cầu Kiệu
+
+55
+
+TP.HCM
+
+Các phường 8, 10, 11, 13, một phần phường 15 (quận Phú Nhuận)
+
+Phường Phú Nhuận
+
+56
+
+TP.HCM
+
+Các phường 1, 2, 3 (quận Tân Bình)
+
+Phường Tân Sơn Hòa
+
+57
+
+TP.HCM
+
+Các phường 4, 5, 7 (quận Tân Bình)
+
+Phường Tân Sơn Nhất
+
+58
+
+TP.HCM
+
+Các phường 6, 8, 9 (quận Tân Bình)
+
+Phường Tân Hòa
+
+59
+
+TP.HCM
+
+Các phường 10, 11, 12 (quận Tân Bình)
+
+Phường Bảy Hiền
+
+60
+
+TP.HCM
+
+Các phường 13, 14, một phần phường 15 (quận Tân Bình)
+
+Phường Tân Bình
+
+61
+
+TP.HCM
+
+Phần còn lại phường 15 (quận Tân Bình)
+
+Phường Tân Sơn
+
+62
+
+TP.HCM
+
+Các phường Tây Thạnh, một phần phường Sơn Kỳ
+
+Phường Tây Thạnh
+
+63
+
+TP.HCM
+
+Các phường Tân Sơn Nhì, Sơn Kỳ, một phần phường Tân Quý và Tân Thành
+
+Phường Tân Sơn Nhì
+
+64
+
+TP.HCM
+
+Các phường Phú Thọ Hòa, một phần phường Tân Thành và Tân Quý
+
+Phường Phú Thọ Hòa
+
+65
+
+TP.HCM
+
+Các phường Phú Trung, Hòa Thạnh, một phần phường Tân Thới Hòa và Tân Thành
+
+Phường Tân Phú
+
+66
+
+TP.HCM
+
+Các phường Hiệp Tân, Phú Thạnh, một phần phường Tân Thới Hòa
+
+Phường Phú Thạnh
+
+67
+
+TP.HCM
+
+Các phường Hiệp Bình Chánh, Hiệp Bình Phước, một phần phường Linh Đông
+
+Phường Hiệp Bình
+
+68
+
+TP.HCM
+
+Các phường Bình Thọ, Linh Chiểu, Trường Thọ, một phần phường Linh Tây và Linh Đông
+
+Phường Thủ Đức
+
+69
+
+TP.HCM
+
+Các phường Bình Chiểu, Tam Phú, Tam Bình
+
+Phường Tam Bình
+
+70
+
+TP.HCM
+
+Các phường Linh Trung, Linh Xuân, một phần phường Linh Tây
+
+Phường Linh Xuân
+
+71
+
+TP.HCM
+
+Các phường Tân Phú (thành phố Thủ Đức), Hiệp Phú, Tăng Nhơn Phú A, Tăng Nhơn Phú B, một phần phường Long Thạnh Mỹ
+
+Phường Tăng Nhơn Phú
+
+72
+
+TP.HCM
+
+Các phường Long Bình, một phần phường Long Thạnh Mỹ
+
+Phường Long Bình
+
+73
+
+TP.HCM
+
+Các phường Trường Thạnh, Long Phước
+
+Phường Long Phước
+
+74
+
+TP.HCM
+
+Các phường Phú Hữu, Long Trường
+
+Phường Long Trường
+
+75
+
+TP.HCM
+
+Các phường Thạnh Mỹ Lợi, Cát Lái
+
+Phường Cát Lái
+
+76
+
+TP.HCM
+
+Các phường Bình Trưng Đông, Bình Trưng Tây, một phần phường An Phú (thành phố Thủ Đức)
+
+Phường Bình Trưng
+
+77
+
+TP.HCM
+
+Các phường Phước Bình, Phước Long A, Phước Long B
+
+Phường Phước Long
+
+78
+
+TP.HCM
+
+Các phường Thủ Thiêm, An Lợi Đông, Thảo Điền, An Khánh, một phần phường An Phú (thành phố Thủ Đức)
+
+Phường An Khánh
+
+79
+
+Bình Dương
+
+Các phường Bình An, Bình Thắng, Đông Hòa
+
+Phường Đông Hòa
+
+80
+
+Bình Dương
+
+Các phường An Bình, Dĩ An, một phần phường Tân Đông Hiệp
+
+Phường Dĩ An
+
+81
+
+Bình Dương
+
+Các phường Tân Bình, một phần phường Thái Hòa và Tân Đông Hiệp
+
+Phường Tân Đông Hiệp
+
+82
+
+Bình Dương
+
+Các phường An Phú (thành phố Thuận An), một phần phường Bình Chuẩn
+
+Phường An Phú
+
+83
+
+Bình Dương
+
+Phường Bình Hòa và một phần phường Vĩnh Phú
+
+Phường Bình Hòa
+
+84
+
+Bình Dương
+
+Các phường Bình Nhâm, Lái Thiêu, một phần phường Vĩnh Phú
+
+Phường Lái Thiêu
+
+85
+
+Bình Dương
+
+Các phường Hưng Định, An Thạnh, Xã An Sơn
+
+Phường Thuận An
+
+86
+
+Bình Dương
+
+Các phường Thuận Giao, Bình Chuẩn
+
+Phường Thuận Giao
+
+87
+
+Bình Dương
+
+Các phường Phú Cường, Phú Thọ, Chánh Nghĩa, một phần phường Hiệp Thành (thành phố Thủ Dầu Một), Chánh Mỹ
+
+Phường Thủ Dầu Một
+
+88
+
+Bình Dương
+
+Các phường Phú Hòa, Phú Lợi, một phần phường Hiệp Thành (thành phố Thủ Dầu Một)
+
+Phường Phú Lợi
+
+89
+
+Bình Dương
+
+Các phường Định Hòa, Tương Bình Hiệp, một phần phường Hiệp An và Chánh Mỹ
+
+Phường Chánh Hiệp
+
+90
+
+Bình Dương
+
+Các phường Phú Mỹ (thành phố Thủ Dầu Một), Hòa Phú, Phú Tân, Phú Chánh
+
+Phường Bình Dương
+
+91
+
+Bình Dương
+
+Các phường Tân Định (thành phố Bến Cát), Hòa Lợi
+
+Phường Hòa Lợi
+
+92
+
+Bình Dương
+
+Các phường Tân An, Xã Phú An, Hiệp An
+
+Phường Phú An
+
+93
+
+Bình Dương
+
+Phường An Tây, một phần xã Thanh Tuyền và xã An Lập
+
+Phường Tây Nam
+
+94
+
+Bình Dương
+
+Phường An Điền, xã Long Nguyên, một phần phường Mỹ Phước
+
+Phường Long Nguyên
+
+95
+
+Bình Dương
+
+Xã Tân Hưng (huyện Bàu Bàng), xã Lai Hưng, một phần phường Mỹ Phước
+
+Phường Bến Cát
+
+96
+
+Bình Dương
+
+Phường Chánh Phú Hòa, Xã Hưng Hòa
+
+Phường Chánh Phú Hòa
+
+97
+
+Bình Dương
+
+Phường Vĩnh Tân, Thị trấn Tân Bình
+
+Phường Vĩnh Tân
+
+98
+
+Bình Dương
+
+Xã Bình Mỹ (huyện Bắc Tân Uyên), Phường Hội Nghĩa
+
+Phường Bình Cơ
+
+99
+
+Bình Dương
+
+Phường Uyên Hưng, Xã Bạch Đằng, Xã Tân Lập, một phần xã Tân Mỹ
+
+Phường Tân Uyên
+
+100
+
+Bình Dương
+
+Các phường Khánh Bình, Tân Hiệp
+
+Phường Tân Hiệp
+
+101
+
+Bình Dương
+
+Các phường Thạnh Phước, Tân Phước Khánh, Tân Vĩnh Hiệp, một phần phường Thái Hòa và xã Thạnh Hội
+
+Phường Tân Khánh
+
+102
+
+Bà Rịa - Vũng Tàu
+
+Các phường 1, 2, 3, 4, 5 (thành phố Vũng Tàu), Thắng Nhì, Thắng Tam
+
+Phường Vũng Tàu
+
+103
+
+Bà Rịa - Vũng Tàu
+
+Các phường 7, 8, 9 (thành phố Vũng Tàu), Nguyễn An Ninh
+
+Phường Tam Thắng
+
+104
+
+Bà Rịa - Vũng Tàu
+
+Các phường 10 (thành phố Vũng Tàu), Thắng Nhất, Rạch Dừa
+
+Phường Rạch Dừa
+
+105
+
+Bà Rịa - Vũng Tàu
+
+Các phường 11, 12 (thành phố Vũng Tàu)
+
+Phường Phước Thắng
+
+106
+
+Bà Rịa - Vũng Tàu
+
+Xã Tân Hưng (thành phố Bà Rịa), Kim Dinh, Long Hương
+
+Phường Long Hương
+
+107
+
+Bà Rịa - Vũng Tàu
+
+Các phường Phước Trung, Phước Nguyên, Long Toàn, Phước Hưng
+
+Phường Bà Rịa
+
+108
+
+Bà Rịa - Vũng Tàu
+
+Các phường Long Tâm, Xã Hòa Long, Xã Long Phước
+
+Phường Tam Long
+
+109
+
+Bà Rịa - Vũng Tàu
+
+Các phường Tân Hòa, Tân Hải
+
+Phường Tân Hải
+
+110
+
+Bà Rịa - Vũng Tàu
+
+Các phường Phước Hòa, Tân Phước
+
+Phường Tân Phước
+
+111
+
+Bà Rịa - Vũng Tàu
+
+Các phường Phú Mỹ (thành phố Phú Mỹ), Mỹ Xuân
+
+Phường Phú Mỹ
+
+112
+
+Bà Rịa - Vũng Tàu
+
+Các phường Hắc Dịch, Xã Sông Xoài
+
+Phường Tân Thành
+
+113
+
+TP.HCM
+
+Xã Vĩnh Lộc A và một phần xã Phạm Văn Hai
+
+Xã Vĩnh Lộc
+
+114
+
+TP.HCM
+
+Các xã Vĩnh Lộc B, một phần xã Phạm Văn Hai và một phần phường Tân Tạo
+
+Xã Tân Vĩnh Lộc
+
+115
+
+TP.HCM
+
+Các xã Lê Minh Xuân, Bình Lợi
+
+Xã Bình Lợi
+
+116
+
+TP.HCM
+
+Thị trấn Tân Túc, Xã Tân Nhựt, một phần phường Tân Tạo A, xã Tân Kiên và phường 16 (Quận 8)
+
+Xã Tân Nhựt
+
+117
+
+TP.HCM
+
+Các xã Tân Quý Tây, Bình Chánh, An Phú Tây
+
+Xã Bình Chánh
+
+118
+
+TP.HCM
+
+Các xã Đa Phước, Qui Đức, Hưng Long
+
+Xã Hưng Long
+
+119
+
+TP.HCM
+
+Các xã Phong Phú, xã Bình Hưng, một phần phường 7 (Quận 8)
+
+Xã Bình Hưng
+
+120
+
+TP.HCM
+
+Các xã Tam Thôn Hiệp, Bình Khánh, một phần xã An Thới Đông
+
+Xã Bình Khánh
+
+121
+
+TP.HCM
+
+Xã Lý Nhơn và một phần xã An Thới Đông
+
+Xã An Thới Đông
+
+122
+
+TP.HCM
+
+Xã Long Hòa (huyện Cần Giờ), Thị trấn Cần Thạnh
+
+Xã Cần Giờ
+
+123
+
+TP.HCM
+
+Các xã Tân Phú Trung, Tân Thông Hội, Phước Vĩnh An
+
+Xã Củ Chi
+
+124
+
+TP.HCM
+
+Thị trấn Củ Chi, Xã Phước Hiệp, Xã Tân An Hội
+
+Xã Tân An Hội
+
+125
+
+TP.HCM
+
+Các xã Trung Lập Thượng, Phước Thạnh, Thái Mỹ
+
+Xã Thái Mỹ
+
+126
+
+TP.HCM
+
+Các xã Phú Mỹ Hưng, An Phú, An Nhơn Tây
+
+Xã An Nhơn Tây
+
+127
+
+TP.HCM
+
+Các xã Phạm Văn Cội, Trung Lập Hạ, Nhuận Đức
+
+Xã Nhuận Đức
+
+128
+
+TP.HCM
+
+Các xã Tân Thạnh Tây, Tân Thạnh Đông, Phú Hòa Đông
+
+Xã Phú Hòa Đông
+
+129
+
+TP.HCM
+
+Các xã Bình Mỹ (huyện Củ Chi), Hòa Phú, Trung An
+
+Xã Bình Mỹ
+
+130
+
+TP.HCM
+
+Các xã Thới Tam Thôn, Nhị Bình, Đông Thạnh
+
+Xã Đông Thạnh
+
+131
+
+TP.HCM
+
+Các xã Tân Hiệp (huyện Hóc Môn), Xã Tân Xuân, Thị trấn Hóc Môn
+
+Xã Hóc Môn
+
+132
+
+TP.HCM
+
+Các xã Tân Thới Nhì, Xuân Thới Đông, Xuân Thới Sơn
+
+Xã Xuân Thới Sơn
+
+133
+
+TP.HCM
+
+Các xã Xuân Thới Thượng, Trung Chánh, Bà Điểm
+
+Xã Bà Điểm
+
+134
+
+TP.HCM
+
+Thị trấn Nhà Bè, Xã Phú Xuân, Xã Phước Kiển, Xã Phước Lộc
+
+Xã Nhà Bè
+
+135
+
+TP.HCM
+
+Các xã Nhơn Đức, Long Thới, Hiệp Phước
+
+Xã Hiệp Phước
+
+136
+
+Bình Dương
+
+Các xã Lạc An, Hiếu Liêm, Thường Tân, một phần xã Tân Mỹ
+
+Xã Thường Tân
+
+137
+
+Bình Dương
+
+Thị trấn Tân Thành, Xã Đất Cuốc, Xã Tân Định
+
+Xã Bắc Tân Uyên
+
+138
+
+Bình Dương
+
+Thị trấn Phước Vĩnh, xã An Bình, một phần xã Tam Lập
+
+Xã Phú Giáo
+
+139
+
+Bình Dương
+
+Các xã Vĩnh Hòa, Phước Hòa, một phần xã Tam Lập
+
+Xã Phước Hòa
+
+140
+
+Bình Dương
+
+Các xã Tân Hiệp (huyện Phú Giáo), An Thái, Phước Sang
+
+Xã Phước Thành
+
+141
+
+Bình Dương
+
+Các xã An Linh, Tân Long, An Long
+
+Xã An Long
+
+142
+
+Bình Dương
+
+Xã Trừ Văn Thố, xã Cây Trường II, một phần thị trấn Lai Uyên
+
+Xã Trừ Văn Thố
+
+143
+
+Bình Dương
+
+Phần còn lại thị trấn Lai Uyên
+
+Xã Bàu Bàng
+
+144
+
+Bình Dương
+
+Các xã Long Tân, Long Hòa (huyện Dầu Tiếng), một phần xã Minh Tân và Minh Thạnh
+
+Xã Long Hòa
+
+145
+
+Bình Dương
+
+Các xã Thanh An, một phần xã Định Hiệp, Thanh Tuyền và An Lập
+
+Xã Thanh An
+
+146
+
+Bình Dương
+
+Thị trấn Dầu Tiếng, xã Định An, xã Định Thành và một phần xã Định Hiệp
+
+Xã Dầu Tiếng
+
+147
+
+Bình Dương
+
+Xã Minh Hòa, một phần xã Minh Tân và Minh Thạnh
+
+Xã Minh Thạnh
+
+148
+
+Bà Rịa - Vũng Tàu
+
+Các xã Tóc Tiên và Châu Pha
+
+Xã Châu Pha
+
+149
+
+Bà Rịa - Vũng Tàu
+
+Thị trấn Long Hải, xã Phước Tỉnh và xã Phước Hưng
+
+Xã Long Hải
+
+150
+
+Bà Rịa - Vũng Tàu
+
+Thị trấn Long Điền, Xã Tam An
+
+Xã Long Điền
+
+151
+
+Bà Rịa - Vũng Tàu
+
+Thị trấn Phước Hải, Xã Phước Hội
+
+Xã Phước Hải
+
+152
+
+Bà Rịa - Vũng Tàu
+
+Thị trấn Đất Đỏ, Xã Long Tân (huyện Long Đất), Xã Láng Dài, Xã Phước Long Thọ
+
+Xã Đất Đỏ
+
+153
+
+Bà Rịa - Vũng Tàu
+
+Các xã Đá Bạc, Nghĩa Thành
+
+Xã Nghĩa Thành
+
+154
+
+Bà Rịa - Vũng Tàu
+
+Thị trấn Ngãi Giao, Xã Bình Ba, Xã Suối Nghệ
+
+Xã Ngãi Giao
+
+155
+
+Bà Rịa - Vũng Tàu
+
+Thị trấn Kim Long, Xã Bàu Chinh, Xã Láng Lớn
+
+Xã Kim Long
+
+156
+
+Bà Rịa - Vũng Tàu
+
+Các xã Cù Bị, Xà Bang
+
+Xã Châu Đức
+
+157
+
+Bà Rịa - Vũng Tàu
+
+Các xã Bình Trung, Quảng Thành, Bình Giã
+
+Xã Bình Giã
+
+158
+
+Bà Rịa - Vũng Tàu
+
+Các xã Suối Rao, Xã Sơn Bình, Xã Xuân Sơn
+
+Xã Xuân Sơn
+
+159
+
+Bà Rịa - Vũng Tàu
+
+Thị trấn Phước Bửu, Xã Phước Tân, Xã Phước Thuận
+
+Xã Hồ Tràm
+
+160
+
+Bà Rịa - Vũng Tàu
+
+Các xã Bông Trang, Xã Bưng Riềng, Xã Xuyên Mộc
+
+Xã Xuyên Mộc
+
+161
+
+Bà Rịa - Vũng Tàu
+
+Các xã Hòa Hưng, Hòa Bình, Hòa Hội
+
+Xã Hòa Hội
+
+162
+
+Bà Rịa - Vũng Tàu
+
+Các xã Tân Lâm, Bàu Lâm
+
+Xã Bàu Lâm
+
+163
+
+Bà Rịa - Vũng Tàu
+
+Huyện Côn Đảo
+
+Đặc khu Côn Đảo
+
+164
+
+Bà Rịa - Vũng Tàu
+
+Không sáp nhập
+
+Xã Bình Châu
+
+165
+
+Bà Rịa - Vũng Tàu
+
+Không sáp nhập
+
+Xã Hòa Hiệp
+
+166
+
+Bà Rịa - Vũng Tàu
+
+Không sáp nhập
+
+Xã Long Sơn
+
+167
+
+TP.HCM
+
+Không sáp nhập
+
+Xã Thạnh An
+
+168
+
+Bình Dương
+
+Không sáp nhập
+
+Phường Thới Hòa

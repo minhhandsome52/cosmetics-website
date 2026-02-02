@@ -304,6 +304,25 @@ const couponsAPI = {
 };
 
 // =============================================
+// CUSTOMERS API (Admin)
+// =============================================
+const customersAPI = {
+    getAll: (params = {}) => {
+        const queryString = new URLSearchParams(params).toString();
+        return apiFetch(`/customers${queryString ? '?' + queryString : ''}`);
+    },
+
+    getById: (id) => apiFetch(`/customers/${id}`),
+
+    getOrders: (id, params = {}) => {
+        const queryString = new URLSearchParams(params).toString();
+        return apiFetch(`/customers/${id}/orders${queryString ? '?' + queryString : ''}`);
+    },
+
+    getStats: () => apiFetch('/customers/stats')
+};
+
+// =============================================
 // UTILITY FUNCTIONS
 // =============================================
 
@@ -427,7 +446,8 @@ window.API = {
     orders: ordersAPI,
     reviews: reviewsAPI,
     coupons: couponsAPI,
-    wishlist: wishlistAPI
+    wishlist: wishlistAPI,
+    customers: customersAPI
 };
 
 window.Utils = {

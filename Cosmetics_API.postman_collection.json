@@ -1,0 +1,800 @@
+{
+	"info": {
+		"_postman_id": "cosmetics-api-collection",
+		"name": "Cosmetics API - Website Mỹ Phẩm",
+		"description": "Bộ sưu tập API cho website bán mỹ phẩm",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "🔐 Authentication",
+			"description": "API xác thực người dùng",
+			"item": [
+				{
+					"name": "Đăng ký tài khoản",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Nguyễn Văn A\",\n  \"email\": \"user@example.com\",\n  \"password\": \"123456\",\n  \"phone\": \"0901234567\",\n  \"address\": \"123 Đường ABC, Quận 1, TP.HCM\"\n}"
+						},
+						"url": "{{baseUrl}}/api/auth/register"
+					}
+				},
+				{
+					"name": "Đăng nhập",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@cosmetics.com\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": "{{baseUrl}}/api/auth/login"
+					}
+				},
+				{
+					"name": "Lấy thông tin Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/auth/profile"
+					}
+				},
+				{
+					"name": "Cập nhật Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Nguyễn Văn B\",\n  \"phone\": \"0909876543\",\n  \"address\": \"456 Đường XYZ, Quận 2, TP.HCM\"\n}"
+						},
+						"url": "{{baseUrl}}/api/auth/profile"
+					}
+				}
+			]
+		},
+		{
+			"name": "📦 Products",
+			"description": "API quản lý sản phẩm",
+			"item": [
+				{
+					"name": "Lấy tất cả sản phẩm",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/products?page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products"],
+							"query": [
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "10"},
+								{"key": "category", "value": "", "disabled": true},
+								{"key": "brand", "value": "", "disabled": true},
+								{"key": "search", "value": "", "disabled": true},
+								{"key": "minPrice", "value": "", "disabled": true},
+								{"key": "maxPrice", "value": "", "disabled": true}
+							]
+						}
+					}
+				},
+				{
+					"name": "Lấy sản phẩm nổi bật",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/products/featured"
+					}
+				},
+				{
+					"name": "Lấy danh sách thương hiệu",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/products/brands"
+					}
+				},
+				{
+					"name": "Lấy chi tiết sản phẩm",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/products/1"
+					}
+				},
+				{
+					"name": "[Admin] Tạo sản phẩm mới",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"category_id\": 1,\n  \"name\": \"Son môi ABC\",\n  \"brand\": \"L'Oréal\",\n  \"description\": \"Son môi cao cấp\",\n  \"ingredients\": \"Vitamin E, Collagen\",\n  \"usage_instructions\": \"Thoa đều lên môi\",\n  \"price\": 350000,\n  \"image_url\": \"https://example.com/image.jpg\"\n}"
+						},
+						"url": "{{baseUrl}}/api/products"
+					}
+				},
+				{
+					"name": "[Admin] Cập nhật sản phẩm",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Son môi XYZ Updated\",\n  \"price\": 399000\n}"
+						},
+						"url": "{{baseUrl}}/api/products/1"
+					}
+				},
+				{
+					"name": "[Admin] Xóa sản phẩm",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/products/1"
+					}
+				}
+			]
+		},
+		{
+			"name": "🗂️ Categories",
+			"description": "API quản lý danh mục",
+			"item": [
+				{
+					"name": "Lấy tất cả danh mục",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/categories"
+					}
+				},
+				{
+					"name": "Lấy chi tiết danh mục",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/categories/1"
+					}
+				},
+				{
+					"name": "[Admin] Tạo danh mục mới",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Son môi\",\n  \"description\": \"Các loại son môi cao cấp\",\n  \"image_url\": \"https://example.com/category.jpg\"\n}"
+						},
+						"url": "{{baseUrl}}/api/categories"
+					}
+				},
+				{
+					"name": "[Admin] Cập nhật danh mục",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Son môi cao cấp\",\n  \"description\": \"Mô tả mới\"\n}"
+						},
+						"url": "{{baseUrl}}/api/categories/1"
+					}
+				},
+				{
+					"name": "[Admin] Xóa danh mục",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/categories/1"
+					}
+				}
+			]
+		},
+		{
+			"name": "🛒 Cart",
+			"description": "API giỏ hàng",
+			"item": [
+				{
+					"name": "Lấy giỏ hàng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/cart"
+					}
+				},
+				{
+					"name": "Thêm vào giỏ hàng",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_id\": 1,\n  \"quantity\": 2\n}"
+						},
+						"url": "{{baseUrl}}/api/cart"
+					}
+				},
+				{
+					"name": "Cập nhật số lượng",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 3\n}"
+						},
+						"url": "{{baseUrl}}/api/cart/1"
+					}
+				},
+				{
+					"name": "Xóa 1 item khỏi giỏ",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/cart/1"
+					}
+				},
+				{
+					"name": "Xóa sạch giỏ hàng",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/cart"
+					}
+				}
+			]
+		},
+		{
+			"name": "📋 Orders",
+			"description": "API đơn hàng",
+			"item": [
+				{
+					"name": "Tạo đơn hàng",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"shipping_address\": \"123 Đường ABC, Quận 1, TP.HCM\",\n  \"phone\": \"0901234567\",\n  \"notes\": \"Giao giờ hành chính\",\n  \"coupon_code\": \"\"\n}"
+						},
+						"url": "{{baseUrl}}/api/orders"
+					}
+				},
+				{
+					"name": "Đơn hàng của tôi",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/orders/my-orders"
+					}
+				},
+				{
+					"name": "Chi tiết đơn hàng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/orders/1"
+					}
+				},
+				{
+					"name": "[Admin] Tất cả đơn hàng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders?status=pending",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "orders"],
+							"query": [
+								{"key": "status", "value": "pending", "disabled": true}
+							]
+						}
+					}
+				},
+				{
+					"name": "[Admin] Cập nhật trạng thái",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"confirmed\"\n}"
+						},
+						"url": "{{baseUrl}}/api/orders/1/status"
+					}
+				}
+			]
+		},
+		{
+			"name": "📦 Batches",
+			"description": "API quản lý lô hàng",
+			"item": [
+				{
+					"name": "Kiểm tra tồn kho sản phẩm",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/batches/check/1"
+					}
+				},
+				{
+					"name": "[Admin] Tất cả lô hàng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/batches"
+					}
+				},
+				{
+					"name": "[Admin] Lô sắp hết hạn",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/batches/expiring"
+					}
+				},
+				{
+					"name": "[Admin] Lô đã hết hạn",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/batches/expired"
+					}
+				},
+				{
+					"name": "[Admin] Thống kê Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/batches/dashboard-stats"
+					}
+				},
+				{
+					"name": "[Admin] Tạo lô hàng mới",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_id\": 1,\n  \"batch_number\": \"LOT2024001\",\n  \"manufacture_date\": \"2024-01-01\",\n  \"expiry_date\": \"2025-01-01\",\n  \"initial_quantity\": 100\n}"
+						},
+						"url": "{{baseUrl}}/api/batches"
+					}
+				},
+				{
+					"name": "[Admin] Cập nhật lô hàng",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"batch_number\": \"LOT2024001-UPDATED\",\n  \"manufacture_date\": \"2024-01-15\",\n  \"expiry_date\": \"2025-01-15\",\n  \"initial_quantity\": 150\n}"
+						},
+						"url": "{{baseUrl}}/api/batches/1"
+					}
+				},
+				{
+					"name": "[Admin] Xóa lô hàng",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/batches/1"
+					}
+				},
+				{
+					"name": "[Admin] Cập nhật tồn kho",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 50\n}"
+						},
+						"url": "{{baseUrl}}/api/batches/inventory/1"
+					}
+				}
+			]
+		},
+		{
+			"name": "🎫 Coupons",
+			"description": "API mã giảm giá",
+			"item": [
+				{
+					"name": "Kiểm tra mã giảm giá",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"SALE10\",\n  \"order_amount\": 500000\n}"
+						},
+						"url": "{{baseUrl}}/api/coupons/validate"
+					}
+				},
+				{
+					"name": "Mã giảm giá đang hoạt động",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/coupons/active"
+					}
+				},
+				{
+					"name": "[Admin] Tất cả mã giảm giá",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/coupons"
+					}
+				},
+				{
+					"name": "[Admin] Tạo mã giảm giá",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"NEWYEAR2024\",\n  \"discount_type\": \"percent\",\n  \"discount_value\": 15,\n  \"min_order_amount\": 200000,\n  \"max_uses\": 100,\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-01-31\"\n}"
+						},
+						"url": "{{baseUrl}}/api/coupons"
+					}
+				},
+				{
+					"name": "[Admin] Cập nhật mã giảm giá",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"discount_value\": 20,\n  \"is_active\": true\n}"
+						},
+						"url": "{{baseUrl}}/api/coupons/1"
+					}
+				},
+				{
+					"name": "[Admin] Xóa mã giảm giá",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/coupons/1"
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 Customers",
+			"description": "API quản lý khách hàng (Admin)",
+			"item": [
+				{
+					"name": "[Admin] Thống kê khách hàng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/customers/stats"
+					}
+				},
+				{
+					"name": "[Admin] Danh sách khách hàng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers?search=&page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "customers"],
+							"query": [
+								{"key": "search", "value": "", "disabled": true},
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "10"}
+							]
+						}
+					}
+				},
+				{
+					"name": "[Admin] Chi tiết khách hàng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/customers/1"
+					}
+				},
+				{
+					"name": "[Admin] Đơn hàng của khách",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/customers/1/orders"
+					}
+				}
+			]
+		},
+		{
+			"name": "⭐ Reviews",
+			"description": "API đánh giá sản phẩm",
+			"item": [
+				{
+					"name": "Đánh giá của sản phẩm",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/reviews/product/1"
+					}
+				},
+				{
+					"name": "Tạo đánh giá",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rating\": 5,\n  \"comment\": \"Sản phẩm rất tốt, mình rất hài lòng!\"\n}"
+						},
+						"url": "{{baseUrl}}/api/reviews/product/1"
+					}
+				},
+				{
+					"name": "Xóa đánh giá",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/reviews/1"
+					}
+				}
+			]
+		},
+		{
+			"name": "❤️ Wishlist",
+			"description": "API danh sách yêu thích",
+			"item": [
+				{
+					"name": "Lấy danh sách yêu thích",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/wishlist"
+					}
+				},
+				{
+					"name": "Lấy IDs sản phẩm yêu thích",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/wishlist/ids"
+					}
+				},
+				{
+					"name": "Đếm số lượng",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/wishlist/count"
+					}
+				},
+				{
+					"name": "Toggle yêu thích",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/wishlist/toggle/1"
+					}
+				},
+				{
+					"name": "Thêm vào yêu thích",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/wishlist/1"
+					}
+				},
+				{
+					"name": "Xóa khỏi yêu thích",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/wishlist/1"
+					}
+				}
+			]
+		},
+		{
+			"name": "📊 Reports",
+			"description": "API báo cáo thống kê (Admin)",
+			"item": [
+				{
+					"name": "[Admin] Dashboard Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/reports/dashboard"
+					}
+				},
+				{
+					"name": "[Admin] Biểu đồ doanh thu",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/revenue?period=7days",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "revenue"],
+							"query": [
+								{"key": "period", "value": "7days"}
+							]
+						}
+					}
+				},
+				{
+					"name": "[Admin] Doanh thu theo danh mục",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/reports/categories"
+					}
+				},
+				{
+					"name": "[Admin] Top sản phẩm bán chạy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/reports/top-products"
+					}
+				},
+				{
+					"name": "[Admin] Đơn hàng gần đây",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/reports/recent-orders"
+					}
+				}
+			]
+		},
+		{
+			"name": "🏥 Health Check",
+			"description": "Kiểm tra server",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/health"
+					}
+				}
+			]
+		}
+	]
+}

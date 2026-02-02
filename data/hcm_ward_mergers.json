@@ -1,0 +1,173 @@
+{
+    "metadata": {
+        "title": "Sáp nhập phường xã Thành phố Hồ Chí Minh",
+        "description": "Danh sách các phường, xã được sáp nhập theo Nghị quyết số 1685/NQ-UBTVQH15",
+        "effectiveDate": "2025-07-01",
+        "source": "Đề án số 356/ĐA-CP của Chính phủ về sắp xếp các đơn vị hành chính cấp xã của TP.HCM năm 2025",
+        "totalUnitsAfterMerger": 168,
+        "breakdown": {
+            "phuong": 113,
+            "xa": 54,
+            "dacKhu": 1
+        }
+    },
+    "mergers": [
+        {
+            "district": "Quận 1",
+            "districtCode": "Q1",
+            "changes": [
+                {
+                    "newUnit": "Phường Sài Gòn",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường Bến Nghé",
+                        "Một phần Phường Đa Kao",
+                        "Một phần Phường Nguyễn Thái Bình"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                },
+                {
+                    "newUnit": "Phường Tân Định",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường Tân Định",
+                        "Phần còn lại của Phường Đa Kao"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                },
+                {
+                    "newUnit": "Phường Bến Thành",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường Bến Thành",
+                        "Phường Phạm Ngũ Lão",
+                        "Một phần Phường Cầu Ông Lãnh",
+                        "Phần còn lại của Phường Nguyễn Thái Bình"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                },
+                {
+                    "newUnit": "Phường Cầu Ông Lãnh",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường Nguyễn Cư Trinh",
+                        "Phường Cầu Kho",
+                        "Phường Cô Giang",
+                        "Phần còn lại của Phường Cầu Ông Lãnh"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                }
+            ]
+        },
+        {
+            "district": "Quận Gò Vấp",
+            "districtCode": "QGV",
+            "changes": [
+                {
+                    "newUnit": "Phường Thông Tây Hội",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường 8",
+                        "Phường 11"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                },
+                {
+                    "newUnit": "Phường An Hội Tây",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường 12",
+                        "Phường 14"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                },
+                {
+                    "newUnit": "Phường Gò Vấp",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường 10",
+                        "Phường 17"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                }
+            ]
+        },
+        {
+            "district": "Quận Tân Bình",
+            "districtCode": "QTB",
+            "changes": [
+                {
+                    "newUnit": "Phường Tân Bình",
+                    "type": "phuong",
+                    "mergedFrom": [
+                        "Phường 13",
+                        "Phường 14",
+                        "Một phần Phường 15"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                }
+            ]
+        },
+        {
+            "district": "Huyện Củ Chi",
+            "districtCode": "HCC",
+            "changes": [
+                {
+                    "newUnit": "Xã Phú Hòa Đông",
+                    "type": "xa",
+                    "mergedFrom": [
+                        "Xã Tân Thạnh Tây",
+                        "Xã Tân Thạnh Đông",
+                        "Xã Phú Hòa Đông"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                },
+                {
+                    "newUnit": "Xã Bình Mỹ",
+                    "type": "xa",
+                    "mergedFrom": [
+                        "Xã Bình Mỹ",
+                        "Xã Trung An",
+                        "Xã Hòa Phú"
+                    ],
+                    "status": "pending",
+                    "effectiveDate": "2025-07-01"
+                }
+            ]
+        }
+    ],
+    "legalBasis": [
+        {
+            "document": "Nghị quyết số 1685/NQ-UBTVQH15",
+            "issuedBy": "Ủy ban Thường vụ Quốc hội",
+            "description": "Nghị quyết về sắp xếp đơn vị hành chính cấp huyện, cấp xã"
+        },
+        {
+            "document": "Đề án số 356/ĐA-CP",
+            "issuedBy": "Chính phủ",
+            "description": "Đề án về sắp xếp các đơn vị hành chính cấp xã của TP.HCM năm 2025"
+        }
+    ],
+    "timeline": {
+        "planningPhase": "2023-2024",
+        "publicConsultation": "2024",
+        "approvalProcess": "2024-2025",
+        "officialAnnouncement": "2025-06-30",
+        "effectiveDate": "2025-07-01"
+    },
+    "objectives": [
+        "Tinh gọn bộ máy hành chính",
+        "Nâng cao hiệu quả quản lý",
+        "Đáp ứng nhu cầu phát triển đô thị hiện đại",
+        "Tối ưu hóa nguồn lực nhà nước"
+    ]
+}
